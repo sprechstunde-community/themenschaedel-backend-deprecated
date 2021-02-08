@@ -30,4 +30,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'podcasts' => [
+        'rss_feed' => env('PODCAST_RSS_FEED'),
+    ]
 ];
