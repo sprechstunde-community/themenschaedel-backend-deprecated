@@ -38,7 +38,11 @@ class PodcastEpisodesImporter extends Command
      */
     public function handle()
     {
-        dispatch_now(new ImportPodcastEpisodes($this->output));
+        if ($this->output->isVerbose()) {
+            dispatch_now(new ImportPodcastEpisodes($this->output));
+        } else {
+            dispatch_now(new ImportPodcastEpisodes());
+        }
         return 0;
     }
 }

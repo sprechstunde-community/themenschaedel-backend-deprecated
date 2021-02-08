@@ -40,6 +40,7 @@ class ImportPodcastEpisodes implements ShouldQueue
         // download rss feed
         $feed = Feed::loadRss(config('services.podcasts.rss_feed'));
         $feedItems = $feed->item ?? [];
+        $progress = null;
 
         // show progress
         if ($this->output) {
