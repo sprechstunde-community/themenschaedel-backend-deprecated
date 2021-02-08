@@ -39,4 +39,9 @@ class PodcastEpisode extends Model
         'explicit',
         'date_published',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }
