@@ -51,6 +51,25 @@ class Episode extends Model
     }
 
     /**
+     * List of all {@see Claim}s, that got issued for this episode.
+     * @return HasMany
+     */
+    public function claims(): HasMany
+    {
+        return $this->hasMany(Claim::class);
+    }
+
+    /**
+     * List of all {@see Flag}s, that this episode got.
+     *
+     * @return HasMany
+     */
+    public function flags(): HasMany
+    {
+        return $this->hasMany(Flag::class);
+    }
+
+    /**
      * All topics discussed in this episode.
      *
      * @return HasMany
@@ -61,12 +80,22 @@ class Episode extends Model
     }
 
     /**
-     * All sub-topics attached to this episode's topics.s
+     * All sub-topics attached to this episode's topics
      *
      * @return HasManyThrough
      */
     public function subtopics(): HasManyThrough
     {
         return $this->hasManyThrough(Subtopic::class, Topic::class);
+    }
+
+    /**
+     * List of all up and down {@see Vote}s, that this episode got
+     *
+     * @return HasMany
+     */
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
     }
 }
