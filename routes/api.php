@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\PodcastEpisodeController;
+use App\Http\Controllers\Api\EpisodeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('episodes', PodcastEpisodeController::class)
-    ->parameters([
-        'episodes' => 'podcast_episode',
-    ]);
+Route::apiResource('episodes', EpisodeController::class);
