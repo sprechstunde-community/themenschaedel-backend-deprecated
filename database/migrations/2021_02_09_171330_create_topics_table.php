@@ -15,11 +15,11 @@ class CreateTopicsTable extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('podcast_episode_id')->references('id')->on('podcast_episodes');
+            $table->foreignId('episode_id')->references('id')->on('episodes');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('name');
-            $table->timestamp('start');
-            $table->timestamp('end');
+            $table->integer('start');
+            $table->integer('end');
             $table->boolean('ad');
             $table->boolean('community_contribution');
             $table->timestamps();

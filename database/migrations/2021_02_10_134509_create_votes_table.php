@@ -15,7 +15,7 @@ class CreateVotesTable extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('podcast_episode_id')->references('id')->on('podcast_episodes');
+            $table->foreignId('episode_id')->references('id')->on('episodes');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->boolean('positive');
             $table->timestamps();

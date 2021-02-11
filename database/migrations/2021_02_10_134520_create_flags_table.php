@@ -15,7 +15,7 @@ class CreateFlagsTable extends Migration
     {
         Schema::create('flags', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('podcast_episode_id')->references('id')->on('podcast_episodes');
+            $table->foreignId('episode_id')->references('id')->on('episodes');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->text('reason');
             $table->timestamps();
