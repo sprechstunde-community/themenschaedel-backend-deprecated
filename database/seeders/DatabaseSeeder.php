@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\ImportPodcastEpisodes;
+use App\Jobs\PodcastEpisodesImporterJob;
 use App\Models\Claim;
 use App\Models\Episode;
 use App\Models\Flag;
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $stdout = $this->command->getOutput();
 
         // Import all podcast episodes from feed
-        dispatch_now(new ImportPodcastEpisodes($stdout));
+        dispatch_now(new PodcastEpisodesImporterJob($stdout));
         $episodeCount = Episode::all()->count();
         if ($stdout->isVerbose()) $stdout->text(sprintf('Imported %d episodes from rss feed', $episodeCount));
 
