@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\PodcastEpisode;
+use App\Models\Episode;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Throwable;
 
-class PodcastEpisodeController extends Controller
+class EpisodeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +18,7 @@ class PodcastEpisodeController extends Controller
      */
     public function index(): JsonResponse
     {
-        return new JsonResponse(PodcastEpisode::all()->all());
+        return new JsonResponse(Episode::all()->all());
     }
 
     /**
@@ -30,7 +31,7 @@ class PodcastEpisodeController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $model = (new PodcastEpisode())->fill($request->all());
+        $model = (new Episode())->fill($request->all());
         $model->saveOrFail();
 
         return new JsonResponse($model->getAttributes());
@@ -39,11 +40,11 @@ class PodcastEpisodeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param PodcastEpisode $podcastEpisode
+     * @param Episode $podcastEpisode
      *
      * @return JsonResponse
      */
-    public function show(PodcastEpisode $podcastEpisode): JsonResponse
+    public function show(Episode $podcastEpisode): JsonResponse
     {
         return new JsonResponse($podcastEpisode->getAttributes());
     }
@@ -52,12 +53,12 @@ class PodcastEpisodeController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param PodcastEpisode $podcastEpisode
+     * @param Episode $podcastEpisode
      *
      * @return JsonResponse
      * @throws Throwable
      */
-    public function update(Request $request, PodcastEpisode $podcastEpisode): JsonResponse
+    public function update(Request $request, Episode $podcastEpisode): JsonResponse
     {
         $podcastEpisode->fill($request->all());
         $podcastEpisode->saveOrFail();
@@ -67,11 +68,12 @@ class PodcastEpisodeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param PodcastEpisode $podcastEpisode
+     * @param Episode $podcastEpisode
      *
      * @return JsonResponse
+     * @throws Exception
      */
-    public function destroy(PodcastEpisode $podcastEpisode): JsonResponse
+    public function destroy(Episode $podcastEpisode): JsonResponse
     {
         return new JsonResponse($podcastEpisode->delete());
     }
