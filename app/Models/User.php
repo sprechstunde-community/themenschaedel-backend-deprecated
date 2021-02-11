@@ -2,11 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use DateTime;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Class User
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
+ * @package App\Models
+ *
+ * @property string $username
+ * @property string $email
+ * @property string|null $name
+ * @property string|null $description
+ * @property string $password Hashed password
+ * @property string|null $remember_token
+ * @property DateTime $email_verified_at
+ *
+ * @property Collection|Topic[] $topics All {@see Topic}s, that this user has submitted
+ * @property Collection|Subtopic[] $subtopics All {@see Subtopic}s, that this user has submitted
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -17,8 +36,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
+        'name',
+        'description',
         'password',
     ];
 
@@ -40,4 +61,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * All {@see Topic}s, that this user has submitted
+     *
+     * @return HasMany
+     */
+    public function topics(): HasMany
+    {
+        return $this->hasMany(Topic::class);
+    }
+
+    /**
+     * All {@see Subtopic}s, that this user has submitted
+     *
+     * @return HasMany
+     */
+    public function subtopics(): HasMany
+    {
+        return $this->hasMany(Subtopic::class);
+    }
 }
