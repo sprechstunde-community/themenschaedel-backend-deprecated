@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\PodcastEpisode;
+use App\Models\Episode;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -13,11 +13,11 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Lukaswhite\PodcastFeedParser\Artwork;
-use Lukaswhite\PodcastFeedParser\Episode;
+use Lukaswhite\PodcastFeedParser\Episode as PodcastEpisode;
 use Lukaswhite\PodcastFeedParser\Exceptions\InvalidXmlException;
 use Lukaswhite\PodcastFeedParser\Parser;
 
-class ImportPodcastEpisodes implements ShouldQueue
+class PodcastEpisodesImporterJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -59,16 +59,16 @@ class ImportPodcastEpisodes implements ShouldQueue
         }
 
         /**
-         * @var Episode $feedItem
+         * @var PodcastEpisode $feedItem
          */
         foreach ($feedItems->getIterator() as $feedItem) {
 
             // search for existing episodes with the same uuid
             /**
-             * @var $episode PodcastEpisode
+             * @var $episode Episode
              */
-            $episode = PodcastEpisode::firstOrNew([
-                'uuid' => $feedItem->getGuid(),
+            $episode = Episode::firstOrNew([
+                'guid' => $feedItem->getGuid(),
             ]);
 
             // only import if episode wasn't already imported
@@ -76,14 +76,14 @@ class ImportPodcastEpisodes implements ShouldQueue
 
                 // map feed to model
                 $episode->fill([
-                    'uuid' => $feedItem->getGuid(),
+                    'guid' => $feedItem->getGuid(),
                     'episode_number' => $feedItem->getEpisodeNumber(),
                     'title' => $feedItem->getTitle(),
                     'subtitle' => $feedItem->getSubtitle(),
                     'description' => $feedItem->getDescription(),
                     'image' => $feedItem->getArtwork() instanceof Artwork ? $feedItem->getArtwork()->getUri() : null,
                     'type' => $feedItem->getType(),
-                    'duration' => $feedItem->getDuration(),
+                    'duration' => $this->calculateTimespan($feedItem->getDuration()),
                     'explicit' => $feedItem->getExplicit() === 'no' ? false : true,
                     'date_published' => $feedItem->getPublishedDate(),
                 ]);
@@ -101,5 +101,17 @@ class ImportPodcastEpisodes implements ShouldQueue
         if ($progress) {
             $progress->finish();
         }
+    }
+
+    private function calculateTimespan(string $time): int
+    {
+        // Parse input string
+        preg_match('/(?<hours>\d{2}):(?<minutes>\d{2}):(?<seconds>\d{2})/', $time, $matches);
+
+        $time = (int) $matches['seconds']; // Add seconds
+        $time += 60 * (int) $matches['minutes']; // Add minutes as Seconds
+        $time += 60 * 60 * (int) $matches['hours']; // Add hours as Seconds
+
+        return $time;
     }
 }

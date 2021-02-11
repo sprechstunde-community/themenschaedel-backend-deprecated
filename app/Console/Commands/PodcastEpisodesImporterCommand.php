@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ImportPodcastEpisodes;
+use App\Jobs\PodcastEpisodesImporterJob;
 use Illuminate\Console\Command;
 
-class PodcastEpisodesImporter extends Command
+class PodcastEpisodesImporterCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -39,9 +39,9 @@ class PodcastEpisodesImporter extends Command
     public function handle()
     {
         if ($this->output->isVerbose()) {
-            dispatch_now(new ImportPodcastEpisodes($this->output));
+            dispatch_now(new PodcastEpisodesImporterJob($this->output));
         } else {
-            dispatch_now(new ImportPodcastEpisodes());
+            dispatch_now(new PodcastEpisodesImporterJob());
         }
         return 0;
     }
