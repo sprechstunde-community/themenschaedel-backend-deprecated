@@ -15,7 +15,7 @@ class CreatePodcastEpisodesTable extends Migration
     {
         Schema::create('podcast_episodes', function (Blueprint $table) {
             $table->id();
-            $table->uuid('guid')->unique();
+            $table->uuid('guid')->unique()->index();
             $table->unsignedBigInteger('episode_number')->nullable();
             $table->string('title');
             $table->string('subtitle')->nullable();
