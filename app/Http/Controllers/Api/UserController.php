@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\EpisodeResource;
-use App\Models\Episode;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Controller;
 use Throwable;
 
-class EpisodeController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +21,7 @@ class EpisodeController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        return EpisodeResource::collection(Episode::paginate((int) $request->input('per_page')));
+        return JsonResource::collection(User::paginate((int) $request->input('per_page')));
     }
 
     /**
@@ -35,50 +34,53 @@ class EpisodeController extends Controller
      */
     public function store(Request $request): JsonResource
     {
-        $model = (new Episode())->fill($request->all());
+        $model = (new User())->fill($request->all());
         $model->saveOrFail();
 
-        return new EpisodeResource($model);
+        return new JsonResource($model);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Episode $episode
+     * @param User $user
+     *
      *
      * @return JsonResource
      */
-    public function show(Episode $episode): JsonResource
+    public function show(User $user): JsonResource
     {
-        return new EpisodeResource($episode);
+        return new JsonResource($user);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Episode $episode
+     * @param User $user
+     *
      *
      * @return JsonResource
      * @throws Throwable
      */
-    public function update(Request $request, Episode $episode): JsonResource
+    public function update(Request $request, User $user): JsonResource
     {
-        $episode->fill($request->all());
-        $episode->saveOrFail();
-        return new EpisodeResource($episode->getAttributes());
+        $user->fill($request->all());
+        $user->saveOrFail();
+        return new JsonResource($user->getAttributes());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Episode $episode
+     * @param User $user
+     *
      *
      * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(Episode $episode): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
-        return new JsonResponse($episode->delete());
+        return new JsonResponse($user->delete());
     }
 }

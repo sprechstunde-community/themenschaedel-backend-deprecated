@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\EpisodeResource;
+use App\Http\Resources\TopicResource;
 use App\Models\Episode;
+use App\Models\Topic;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,18 +12,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Controller;
 use Throwable;
 
-class EpisodeController extends Controller
+class TopicController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param Episode $episode
      *
      * @return JsonResource
      */
-    public function index(Request $request): JsonResource
+    public function index(Episode $episode): JsonResource
     {
-        return EpisodeResource::collection(Episode::paginate((int) $request->input('per_page')));
+        return new TopicResource($episode->topics);
     }
 
     /**
@@ -35,50 +36,51 @@ class EpisodeController extends Controller
      */
     public function store(Request $request): JsonResource
     {
-        $model = (new Episode())->fill($request->all());
+        $model = (new Topic($request->all()));
         $model->saveOrFail();
 
-        return new EpisodeResource($model);
+        return new TopicResource($model);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Episode $episode
+     * @param Topic $topic
      *
      * @return JsonResource
      */
-    public function show(Episode $episode): JsonResource
+    public function show(Topic $topic): JsonResource
     {
-        return new EpisodeResource($episode);
+        return new TopicResource($topic);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Episode $episode
+     * @param Topic $topic
      *
      * @return JsonResource
      * @throws Throwable
      */
-    public function update(Request $request, Episode $episode): JsonResource
+    public function update(Request $request, Topic $topic): JsonResource
     {
-        $episode->fill($request->all());
-        $episode->saveOrFail();
-        return new EpisodeResource($episode->getAttributes());
+        $topic->fill($request->all());
+        $topic->saveOrFail();
+
+        return new TopicResource($topic);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Episode $episode
+     * @param Topic $topic
      *
      * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(Episode $episode): JsonResponse
+    public function destroy(Topic $topic): JsonResponse
     {
-        return new JsonResponse($episode->delete());
+        return new JsonResponse($topic->delete());
     }
 }
