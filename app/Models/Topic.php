@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property Episode $episode The {@see Episode}, in which this topic gets discussed
  * @property Collection|Subtopic[] $subtopics All {@see Subtopic}s that too get discussed in this section
+ * @property User $user The {@see User}, that has submitted this topic
  */
 class Topic extends Model
 {
@@ -34,6 +35,11 @@ class Topic extends Model
         'end',
         'ad',
         'community_contribution',
+    ];
+
+    protected $with = [
+        'user',
+        'subtopics',
     ];
 
     /**
@@ -51,8 +57,18 @@ class Topic extends Model
      *
      * @return HasMany
      */
-    public function subtopic(): HasMany
+    public function subtopics(): HasMany
     {
         return $this->hasMany(Subtopic::class);
+    }
+
+    /**
+     * The {@see User}, that has submitted this topic
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

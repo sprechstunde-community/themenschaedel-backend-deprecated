@@ -34,6 +34,8 @@ class Episode extends Model
 {
     use HasFactory;
 
+    protected $perPage = 50;
+
     protected $fillable = [
         'guid',
         'episode_number',

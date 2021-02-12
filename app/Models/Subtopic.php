@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property string $name The name of the subtopic
  * @property Topic $topic The {@see Topic}, that this is a part of
+ * @property User $user The {@see User}, that has submitted this subtopic
  */
 class Subtopic extends Model
 {
@@ -21,6 +22,10 @@ class Subtopic extends Model
 
     protected $fillable = [
         'name',
+    ];
+
+    protected $with = [
+        'user',
     ];
 
     /**
@@ -31,5 +36,15 @@ class Subtopic extends Model
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class);
+    }
+
+    /**
+     * The {@see User}, that has submitted this subtopic
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
