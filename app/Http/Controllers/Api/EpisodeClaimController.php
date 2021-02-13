@@ -41,11 +41,11 @@ class EpisodeClaimController extends AbstractApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param Claim $claim
+     * @param Episode $episode
      *
      * @return JsonResponse
      */
-    public function destroy(Episode $episode, Claim $claim)
+    public function destroy(Episode $episode): JsonResponse
     {
         // TODO return 403 if auth user isn't claiming user
 
@@ -56,6 +56,6 @@ class EpisodeClaimController extends AbstractApiController
                 ], 409);
         }
 
-        return new JsonResponse($episode->claimed()->delete());
+        return new JsonResponse(null, $episode->claimed()->delete() ? 200 : 500);
     }
 }
