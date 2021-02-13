@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
 
-            $domain = parse_url(config('app.domain'), PHP_URL_HOST) ?? 'localhost';
+            $domain = parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost';
 
             Route::domain('api.' . $domain)
                 ->as('api.')
