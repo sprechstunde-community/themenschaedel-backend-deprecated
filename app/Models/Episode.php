@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * An episode of the podcast.
@@ -27,8 +28,11 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property boolean explicit
  * @property DateTime published_at
  *
+ * @property Claim|null $claimed The active {@see Claim} resource indicating, that this episode is currently claimed.
+ * @property Collection|Flag[] $flags All flags, that this episode has.
  * @property Collection|Topic[] $topics All topics discussed in this episode.
  * @property Collection|Subtopic[] $subtopics All subtopics attached to this episode.
+ * @property Collection|Vote[] $votes All votes attached to this episode.
  */
 class Episode extends Model
 {
@@ -58,11 +62,11 @@ class Episode extends Model
     /**
      * List of all {@see Claim}s, that got issued for this episode.
      *
-     * @return HasMany
+     * @return HasOne
      */
-    public function claims(): HasMany
+    public function claimed(): HasOne
     {
-        return $this->hasMany(Claim::class);
+        return $this->hasOne(Claim::class);
     }
 
     /**
