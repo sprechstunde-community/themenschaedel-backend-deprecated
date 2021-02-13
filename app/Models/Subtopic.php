@@ -24,6 +24,16 @@ class Subtopic extends Model
         'name',
     ];
 
+    /**
+     * All of the relationships to be marked as updated too.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'topic',
+        'user',
+    ];
+
     protected $with = [
         'user',
     ];

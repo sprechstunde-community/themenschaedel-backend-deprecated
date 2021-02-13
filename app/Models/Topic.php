@@ -37,6 +37,16 @@ class Topic extends Model
         'community_contribution',
     ];
 
+    /**
+     * All of the relationships to be marked as updated too.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'episode',
+        'user',
+    ];
+
     protected $with = [
         'user',
         'subtopics',

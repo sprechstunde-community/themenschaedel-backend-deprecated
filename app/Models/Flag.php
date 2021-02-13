@@ -26,6 +26,19 @@ class Flag extends Model
     ];
 
     /**
+     * All of the relationships to be marked as updated too.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'user',
+    ];
+
+    protected $with = [
+        'user',
+    ];
+
+    /**
      * The {@see Episode}, that got flagged for renewal.
      *
      * @return BelongsTo
