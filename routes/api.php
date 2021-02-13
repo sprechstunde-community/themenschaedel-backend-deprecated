@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\EpisodeClaimController;
 use App\Http\Controllers\Api\EpisodeController;
 use App\Http\Controllers\Api\SubtopicController;
 use App\Http\Controllers\Api\TopicController;
@@ -23,6 +24,8 @@ Route::apiResource('episodes', EpisodeController::class);
 
 Route::get('topics', [TopicController::class, 'index'])->name('topics.index');
 Route::get('episodes/{episode}/topics', [TopicController::class, 'indexScoped'])->name('episodes.topics.index');
+Route::post('episodes/{episode}/claim', [EpisodeClaimController::class, 'store'])->name('episodes.claim.store');
+Route::delete('episodes/{episode}/claim', [EpisodeClaimController::class, 'destroy'])->name('episodes.claim.destroy');
 Route::apiResource('episodes.topics', TopicController::class)->except(['index'])->shallow();
 
 Route::get('subtopics', [SubtopicController::class, 'index'])->name('subtopics.index');
