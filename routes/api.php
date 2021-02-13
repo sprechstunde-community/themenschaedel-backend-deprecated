@@ -22,7 +22,9 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('episodes', EpisodeController::class);
 
 Route::get('topics', [TopicController::class, 'index'])->name('topics.index');
-Route::apiResource('episodes.topics', TopicController::class)->shallow();
+Route::get('episodes/{episode}/topics', [TopicController::class, 'indexScoped'])->name('episodes.topics.index');
+Route::apiResource('episodes.topics', TopicController::class)->except(['index'])->shallow();
 
 Route::get('subtopics', [SubtopicController::class, 'index'])->name('subtopics.index');
-Route::apiResource('topics.subtopics', SubtopicController::class)->shallow();
+Route::get('topics/{topic}/subtopics', [SubtopicController::class, 'indexScoped'])->name('topics.subtopics.index');
+Route::apiResource('topics.subtopics', SubtopicController::class)->except(['index'])->shallow();

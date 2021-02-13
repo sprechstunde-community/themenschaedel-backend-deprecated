@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\SubtopicResource;
 use App\Models\Subtopic;
+use App\Models\Topic;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,17 @@ class SubtopicController extends Controller
      */
     public function index(): JsonResource
     {
-        return SubtopicResource::collection(Subtopic::all());
+        return SubtopicResource::collection(Subtopic::paginate());
+    }
+
+    /**
+     * Display a listing of the resource scoped by the parent resource.
+     *
+     * @return JsonResource
+     */
+    public function indexScoped(Topic $topic): JsonResource
+    {
+        return SubtopicResource::collection(Subtopic::where('topic_id', $topic->id)->paginate());
     }
 
     /**

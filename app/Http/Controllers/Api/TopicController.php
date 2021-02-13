@@ -17,13 +17,23 @@ class TopicController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @return JsonResource
+     */
+    public function index(): JsonResource
+    {
+        return TopicResource::collection(Topic::paginate());
+    }
+
+    /**
+     * Display a listing of the resource scoped by parent model.
+     *
      * @param Episode $episode
      *
      * @return JsonResource
      */
-    public function index(Episode $episode): JsonResource
+    public function indexScoped(Episode $episode): JsonResource
     {
-        return new TopicResource($episode->topics);
+        return TopicResource::collection(Topic::where('episode_id', $episode->id)->paginate());
     }
 
     /**
