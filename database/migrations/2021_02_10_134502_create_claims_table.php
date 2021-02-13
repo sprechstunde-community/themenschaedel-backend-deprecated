@@ -18,6 +18,7 @@ class CreateClaimsTable extends Migration
             $table->foreignId('episode_id')->references('id')->on('episodes');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamp('claimed_at');
+            $table->timestamps();
 
             $table->unique('episode_id');
             $table->unique('user_id');
