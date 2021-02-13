@@ -85,7 +85,7 @@ class PodcastEpisodesImporterJob implements ShouldQueue
                     'type' => $feedItem->getType(),
                     'duration' => $this->calculateTimespan($feedItem->getDuration()),
                     'explicit' => $feedItem->getExplicit() === 'no' ? false : true,
-                    'date_published' => $feedItem->getPublishedDate(),
+                    'published_at' => $feedItem->getPublishedDate(),
                 ]);
 
                 // persist model in database

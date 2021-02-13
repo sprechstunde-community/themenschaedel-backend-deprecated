@@ -25,7 +25,7 @@ class CreateEpisodesTable extends Migration
             $table->unsignedInteger('duration')->nullable();
             $table->string('type')->nullable();
             $table->boolean('explicit')->default(false);
-            $table->timestamp('date_published')->nullable();
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }

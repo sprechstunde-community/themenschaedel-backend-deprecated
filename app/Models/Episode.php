@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property string|null duration
  * @property string|null type
  * @property boolean explicit
- * @property Carbon date_published
+ * @property DateTime published_at
  *
  * @property Collection|Topic[] $topics All topics discussed in this episode.
  * @property Collection|Subtopic[] $subtopics All subtopics attached to this episode.
@@ -47,7 +47,7 @@ class Episode extends Model
         'duration',
         'type',
         'explicit',
-        'date_published',
+        'published_at',
     ];
 
     public function getRouteKeyName()
@@ -57,6 +57,7 @@ class Episode extends Model
 
     /**
      * List of all {@see Claim}s, that got issued for this episode.
+     *
      * @return HasMany
      */
     public function claims(): HasMany
