@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @author Vincent Neubauer <v.neubauer@darlor.de>
  * @package App\Models
  *
+ * @property bool $positive Indicator if vote is an upvote or an down vote
+ *
  * @property Episode $episode The voted {@see Episode}
  * @property User $user The voting {@see User}
  */
