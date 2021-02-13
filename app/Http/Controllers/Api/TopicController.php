@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\TopicResource;
 use App\Models\Episode;
 use App\Models\Topic;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -39,17 +40,21 @@ class TopicController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param Episode $episode
      * @param Request $request
      *
      * @return JsonResource
      * @throws Throwable
      */
-    public function store(Request $request): JsonResource
+    public function store(Episode $episode, Request $request): JsonResource
     {
-        $model = (new Topic($request->all()));
-        $model->saveOrFail();
+        $topic = new Topic();
+        $topic->fill($request->all());
+        // TODO enforce setting user id by authenticated user
+        $topic->user()->associate(User::all()->random());
+        $episode->topics()->save($topic);
 
-        return new TopicResource($model);
+        return new TopicResource($topic->refresh());
     }
 
     /**

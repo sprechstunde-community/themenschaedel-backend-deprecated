@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\SubtopicResource;
 use App\Models\Subtopic;
 use App\Models\Topic;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,12 +43,15 @@ class SubtopicController extends Controller
      * @return JsonResource
      * @throws Throwable
      */
-    public function store(Request $request): JsonResource
+    public function store(Topic $topic, Request $request): JsonResource
     {
-        $model = (new Subtopic($request->all()));
-        $model->saveOrFail();
+        $subtopic = new Subtopic();
+        $subtopic->fill($request->all());
+        // TODO enforce setting user id by authenticated user
+        $subtopic->user()->associate(User::all()->random());
+        $topic->subtopics()->save($subtopic);
 
-        return new SubtopicResource($model);
+        return new SubtopicResource($subtopic->refresh());
     }
 
     /**
