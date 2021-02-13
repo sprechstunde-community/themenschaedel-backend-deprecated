@@ -10,38 +10,47 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Routing\Controller;
 use Throwable;
 
-class SubtopicController extends Controller
+class SubtopicController extends AbstractApiController
 {
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     *
      * @return JsonResource
      */
-    public function index(): JsonResource
+    public function index(Request $request): JsonResource
     {
-        return SubtopicResource::collection(Subtopic::paginate());
+        return SubtopicResource::collection(
+            Subtopic::paginate($this->getPerPageParameter($request))
+        );
     }
 
     /**
      * Display a listing of the resource scoped by the parent resource.
      *
+     * @param Topic $topic
+     * @param Request $request
+     *
      * @return JsonResource
      */
-    public function indexScoped(Topic $topic): JsonResource
+    public function indexScoped(Topic $topic, Request $request): JsonResource
     {
-        return SubtopicResource::collection(Subtopic::where('topic_id', $topic->id)->paginate());
+        return SubtopicResource::collection(
+            Subtopic::where('topic_id', $topic->id)
+                ->paginate($this->getPerPageParameter($request))
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param Topic $topic
      * @param Request $request
      *
      * @return JsonResource
-     * @throws Throwable
      */
     public function store(Topic $topic, Request $request): JsonResource
     {

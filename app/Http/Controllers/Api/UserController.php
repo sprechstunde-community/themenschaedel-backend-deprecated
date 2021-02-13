@@ -7,10 +7,9 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Routing\Controller;
 use Throwable;
 
-class UserController extends Controller
+class UserController extends AbstractApiController
 {
     /**
      * Display a listing of the resource.
@@ -21,7 +20,9 @@ class UserController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        return JsonResource::collection(User::paginate((int) $request->input('per_page')));
+        return JsonResource::collection(
+            User::paginate($this->getPerPageParameter($request))
+        );
     }
 
     /**
