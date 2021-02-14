@@ -22,7 +22,7 @@ class FlagController extends AbstractApiController
     public function index(Request $request): JsonResource
     {
         return new JsonResource(
-            Flag::paginated($this->getPerPageParameter($request))
+            Flag::paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -37,8 +37,8 @@ class FlagController extends AbstractApiController
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
         return new JsonResource(
-            Flag::where($episode->getKeyName(), $episode->getKey())
-                ->paginated($this->getPerPageParameter($request))
+            Flag::where('episode_id', $episode->getKey())
+                ->paginate($this->getPerPageParameter($request))
         );
     }
 
