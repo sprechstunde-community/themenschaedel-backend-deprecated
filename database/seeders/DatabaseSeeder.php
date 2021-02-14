@@ -6,6 +6,7 @@ use App\Jobs\PodcastEpisodesImporterJob;
 use App\Models\Claim;
 use App\Models\Episode;
 use App\Models\Flag;
+use App\Models\Host;
 use App\Models\Subtopic;
 use App\Models\Topic;
 use App\Models\User;
@@ -32,6 +33,13 @@ class DatabaseSeeder extends Seeder
         $userCount = 50;
         if ($stdout->isVerbose()) $stdout->text(sprintf('Generating %d users', $userCount));
         User::factory($userCount)->create();
+
+        // Generate dummy hosts
+        $hostCount = 10;
+        if ($stdout->isVerbose()) $stdout->text(sprintf('Generating %d show hosts', $hostCount));
+        Host::factory($hostCount)->create();
+        if ($stdout->isVerbose()) $stdout->text('Attaching 2 to 5 show hosts onto each episodes');
+        Episode::all()->each(fn(Episode $episode) => $episode->hosts()->saveMany(Host::all()->random(rand(2, 5))));
 
         // Generate topics to episodes with each up to 5 subtopics
         $topicCount = $episodeCount * 2;
