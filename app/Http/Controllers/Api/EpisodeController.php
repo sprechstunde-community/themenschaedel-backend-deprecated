@@ -106,7 +106,7 @@ class EpisodeController extends AbstractApiController
         $user = User::all()->random();
 
         $direction = (int) $request->input('direction');
-        $vote = $episode->votes()->where($user->getKeyName(), $user->getKey())->first();
+        $vote = $episode->votes()->where('user_id', $user->getKey())->first();
 
         if ($direction === 0) {
             // Delete vote and return status code
