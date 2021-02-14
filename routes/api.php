@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\EpisodeClaimController;
 use App\Http\Controllers\Api\EpisodeController;
 use App\Http\Controllers\Api\FlagController;
+use App\Http\Controllers\Api\HostController;
 use App\Http\Controllers\Api\SubtopicController;
 use App\Http\Controllers\Api\TopicController;
 use App\Http\Controllers\Api\UserController;
@@ -21,8 +22,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('users', UserController::class);
 
+// episodes
+Route::get('episodes/{episodes}/hosts', [HostController::class, 'indexScoped'])->name('episodes.hosts.index');
 Route::apiResource('episodes', EpisodeController::class);
 
+// topics
 Route::get('topics', [TopicController::class, 'index'])->name('topics.index');
 Route::apiResource('episodes.topics', TopicController::class)->except(['index'])->shallow();
 Route::get('episodes/{episode}/topics', [TopicController::class, 'indexScoped'])->name('episodes.topics.index');
@@ -30,10 +34,15 @@ Route::post('episodes/{episode}/claim', [EpisodeClaimController::class, 'store']
 Route::delete('episodes/{episode}/claim', [EpisodeClaimController::class, 'destroy'])->name('episodes.claim.destroy');
 Route::post('episodes/{episode}/vote', [EpisodeController::class, 'vote'])->name('episodes.vote');
 
+// flags
 Route::get('flags', [FlagController::class, 'index'])->name('flags.index');
 Route::get('episodes/{episode}/flags', [FlagController::class, 'indexScoped'])->name('episodes.flags.index');
 Route::apiResource('episodes.flags', FlagController::class)->except(['index'])->shallow();
 
+// hosts
+Route::apiResource('hosts', HostController::class);
+
+// subtopics
 Route::get('subtopics', [SubtopicController::class, 'index'])->name('subtopics.index');
 Route::get('topics/{topic}/subtopics', [SubtopicController::class, 'indexScoped'])->name('topics.subtopics.index');
 Route::apiResource('topics.subtopics', SubtopicController::class)->except(['index'])->shallow();
