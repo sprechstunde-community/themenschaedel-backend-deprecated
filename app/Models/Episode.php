@@ -6,6 +6,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property Claim|null $claimed The active {@see Claim} resource indicating, that this episode is currently claimed.
  * @property Collection|Flag[] $flags All flags, that this episode has.
+ * @property Collection|Host[] $hosts All {@see Host}s, that were present on this episode.
  * @property Collection|Topic[] $topics All topics discussed in this episode.
  * @property Collection|Subtopic[] $subtopics All subtopics attached to this episode.
  * @property Collection|Vote[] $votes All votes attached to this episode.
@@ -52,6 +54,10 @@ class Episode extends Model
         'type',
         'explicit',
         'published_at',
+    ];
+
+    protected $with = [
+        'hosts',
     ];
 
     public function getRouteKeyName()
@@ -77,6 +83,16 @@ class Episode extends Model
     public function flags(): HasMany
     {
         return $this->hasMany(Flag::class);
+    }
+
+    /**
+     * All {@see Host}s, that were present on this episode.
+     *
+     * @return BelongsToMany
+     */
+    public function hosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Host::class);
     }
 
     /**
