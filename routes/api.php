@@ -25,7 +25,7 @@ Route::apiResource('users', UserController::class);
 
 // episodes
 Route::apiResource('episodes', EpisodeController::class);
-Route::get('episodes/{episodes}/hosts', [HostController::class, 'indexScoped'])->name('episodes.hosts.index');
+Route::get('episodes/{episode}/hosts', [HostController::class, 'indexScoped'])->name('episodes.hosts.index');
 Route::post('episodes/{episode}/vote', [EpisodeController::class, 'vote'])->name('episodes.vote');
 
 // episode claims
