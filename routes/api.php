@@ -38,6 +38,8 @@ Route::get('episodes/{episode}/flags', [FlagController::class, 'indexScoped'])->
 Route::apiResource('episodes.flags', FlagController::class)->except(['index'])->shallow();
 
 // hosts
+Route::post('hosts/{host}/episodes/{episode}', [HostController::class, 'attachEpisode'])->name('hosts.episodes.attach');
+Route::delete('hosts/{host}/episodes/{episode}', [HostController::class, 'detachEpisode'])->name('hosts.episodes.detach');
 Route::apiResource('hosts', HostController::class);
 
 // topics

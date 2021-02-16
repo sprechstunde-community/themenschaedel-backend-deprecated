@@ -5,13 +5,32 @@ namespace App\Http\Controllers\Api;
 use App\Models\Episode;
 use App\Models\Host;
 use Exception;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class HostController extends AbstractApiController
 {
+
+    private ConnectionInterface $db;
+    private LoggerInterface $logger;
+
+    /**
+     * HostController constructor.
+     *
+     * @param ConnectionInterface $connection
+     * @param LoggerInterface $logger
+     */
+    public function __construct(ConnectionInterface $connection, LoggerInterface $logger)
+    {
+        $this->db = $connection;
+        $this->logger = $logger;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -101,5 +120,58 @@ class HostController extends AbstractApiController
     public function destroy(Host $host): JsonResponse
     {
         return new JsonResponse(null, $host->delete() ? 200 : 500);
+    }
+
+    /**
+     * Assign an episode onto the host
+     *
+     * @param Host $host
+     * @param Episode $episode
+     *
+     * @return Response|JsonResponse
+     */
+    public function attachEpisode(Host $host, Episode $episode)
+    {
+        $entryExists = $this->db->table('episode_host')
+            ->where('episode_id', $episode->getKey())
+            ->where('host_id', $host->getKey())
+            ->get()->first();
+
+        if (!empty($entryExists)) {
+            return new Response(null); // return status 200, because relation already exists
+        }
+
+        try {
+            $host->episodes()->attach($episode->getKey());
+            return new Response(null); // return status 200 to indicate success
+        } catch (Throwable $exception) {
+            // Log as much useful information as possible
+            $this->logger->error('Failed to populate host-episode-relationship', [
+                'episode' => $episode->getKey(),
+                'host' => $host->getKey(),
+                'message' => $exception->getMessage(),
+            ]);
+        } finally {
+            // return status 500 to indicate failed request
+            return new JsonResponse([
+                'status' => 500,
+                'reason' => 'INTERNAL_SERVER_ERROR',
+                'message' => 'See server logs for additional information',
+            ], 500);
+        }
+    }
+
+    /**
+     * Detach an episode onto the host
+     *
+     * @param Host $host
+     * @param Episode $episode
+     *
+     * @return void
+     */
+    public function detachEpisode(Host $host, Episode $episode): void
+    {
+        // will not throw an exception if the relation does not exist
+        $host->episodes()->detach($episode->getKey());
     }
 }
