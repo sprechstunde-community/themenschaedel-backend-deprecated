@@ -21,7 +21,8 @@ class UserController extends AbstractApiController
     public function index(Request $request): JsonResource
     {
         return JsonResource::collection(
-            User::paginate($this->getPerPageParameter($request))
+            User::with([])
+                ->paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -38,7 +39,7 @@ class UserController extends AbstractApiController
         $model = (new User())->fill($request->all());
         $model->saveOrFail();
 
-        return new JsonResource($model);
+        return new JsonResource($model->refresh());
     }
 
     /**
@@ -51,7 +52,7 @@ class UserController extends AbstractApiController
      */
     public function show(User $user): JsonResource
     {
-        return new JsonResource($user);
+        return new JsonResource($user->loadMissing(['claim', 'topics', 'subtopics']));
     }
 
     /**
@@ -68,7 +69,7 @@ class UserController extends AbstractApiController
     {
         $user->fill($request->all());
         $user->saveOrFail();
-        return new JsonResource($user->getAttributes());
+        return new JsonResource($user->refresh()->loadMissing(['claim', 'topics', 'subtopics']));
     }
 
     /**

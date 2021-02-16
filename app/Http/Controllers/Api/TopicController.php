@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\TopicResource;
 use App\Models\Episode;
 use App\Models\Topic;
 use App\Models\User;
@@ -14,6 +13,11 @@ use Throwable;
 
 class TopicController extends AbstractApiController
 {
+    private array $relations = [
+        'subtopics',
+        'user',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -23,8 +27,9 @@ class TopicController extends AbstractApiController
      */
     public function index(Request $request): JsonResource
     {
-        return TopicResource::collection(
-            Topic::paginate($this->getPerPageParameter($request))
+        return JsonResource::collection(
+            Topic::with($this->relations)
+                ->paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -38,8 +43,10 @@ class TopicController extends AbstractApiController
      */
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
-        return TopicResource::collection(
-            Topic::where('episode_id', $episode->id)
+        return JsonResource::collection(
+            $episode
+                ->topics()
+                ->with($this->relations)
                 ->paginate($this->getPerPageParameter($request))
         );
     }
@@ -61,7 +68,7 @@ class TopicController extends AbstractApiController
         $topic->user()->associate(User::all()->random());
         $episode->topics()->save($topic);
 
-        return new TopicResource($topic->refresh());
+        return new JsonResource($topic->refresh()->loadMissing($this->relations));
     }
 
     /**
@@ -73,7 +80,7 @@ class TopicController extends AbstractApiController
      */
     public function show(Topic $topic): JsonResource
     {
-        return new TopicResource($topic);
+        return new JsonResource($topic->loadMissing($this->relations));
     }
 
     /**
@@ -90,7 +97,7 @@ class TopicController extends AbstractApiController
         $topic->fill($request->all());
         $topic->saveOrFail();
 
-        return new TopicResource($topic);
+        return new JsonResource($topic->refresh()->loadMissing($this->relations));
     }
 
     /**

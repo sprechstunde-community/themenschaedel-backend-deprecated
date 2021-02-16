@@ -40,7 +40,7 @@ class Episode extends Model
 {
     use HasFactory;
 
-    protected $perPage = 50;
+    protected $perPage = 25;
 
     protected $fillable = [
         'guid',
@@ -54,10 +54,6 @@ class Episode extends Model
         'type',
         'explicit',
         'published_at',
-    ];
-
-    protected $with = [
-        'hosts',
     ];
 
     public function getRouteKeyName()

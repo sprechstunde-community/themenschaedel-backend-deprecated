@@ -22,7 +22,6 @@ class EpisodeResource extends JsonResource
             'upvotes' => count($this->votes()->where('positive', true)->get()),
             'downvotes' => count($this->votes()->where('positive', false)->get()),
             'flags' => count($this->flags),
-            'topics' => TopicResource::collection($this->topics),
         ]);
     }
 }

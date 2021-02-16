@@ -12,6 +12,12 @@ use Throwable;
 
 class FlagController extends AbstractApiController
 {
+
+    private array $relations = [
+        'episode',
+        'user',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +28,8 @@ class FlagController extends AbstractApiController
     public function index(Request $request): JsonResource
     {
         return new JsonResource(
-            Flag::paginate($this->getPerPageParameter($request))
+            Flag::with($this->relations)
+                ->paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -37,7 +44,8 @@ class FlagController extends AbstractApiController
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
         return new JsonResource(
-            Flag::where('episode_id', $episode->getKey())
+            $episode->flags()
+                ->with($this->relations)
                 ->paginate($this->getPerPageParameter($request))
         );
     }
@@ -57,7 +65,7 @@ class FlagController extends AbstractApiController
         $flag->fill($request->all());
         $flag->push();
 
-        return new JsonResource($flag->refresh());
+        return new JsonResource($flag->refresh()->loadMissing($this->relations));
     }
 
     /**
@@ -69,7 +77,7 @@ class FlagController extends AbstractApiController
      */
     public function show(Flag $flag): JsonResource
     {
-        return new JsonResource($flag);
+        return new JsonResource($flag->loadMissing($this->relations));
     }
 
     /**
@@ -88,7 +96,7 @@ class FlagController extends AbstractApiController
         $flag->fill($request->all());
         $flag->saveOrFail();
 
-        return new JsonResource($flag);
+        return new JsonResource($flag->refresh()->loadMissing($this->relations));
     }
 
     /**

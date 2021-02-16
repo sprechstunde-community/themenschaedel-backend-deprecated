@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\SubtopicResource;
 use App\Models\Subtopic;
 use App\Models\Topic;
 use App\Models\User;
@@ -14,6 +13,11 @@ use Throwable;
 
 class SubtopicController extends AbstractApiController
 {
+    private array $relations = [
+        'topic',
+        'user',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -23,8 +27,8 @@ class SubtopicController extends AbstractApiController
      */
     public function index(Request $request): JsonResource
     {
-        return SubtopicResource::collection(
-            Subtopic::paginate($this->getPerPageParameter($request))
+        return JsonResource::collection(
+            Subtopic::with([$this->relations])->paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -38,8 +42,9 @@ class SubtopicController extends AbstractApiController
      */
     public function indexScoped(Topic $topic, Request $request): JsonResource
     {
-        return SubtopicResource::collection(
-            Subtopic::where('topic_id', $topic->id)
+        return JsonResource::collection(
+            $topic->subtopics()
+                ->with($this->relations)
                 ->paginate($this->getPerPageParameter($request))
         );
     }
@@ -60,7 +65,7 @@ class SubtopicController extends AbstractApiController
         $subtopic->user()->associate(User::all()->random());
         $topic->subtopics()->save($subtopic);
 
-        return new SubtopicResource($subtopic->refresh());
+        return new JsonResource($subtopic->refresh()->loadMissing($this->relations));
     }
 
     /**
@@ -72,7 +77,7 @@ class SubtopicController extends AbstractApiController
      */
     public function show(Subtopic $subtopic): JsonResource
     {
-        return new SubtopicResource($subtopic);
+        return new JsonResource($subtopic->loadMissing($this->relations));
     }
 
     /**
@@ -89,7 +94,7 @@ class SubtopicController extends AbstractApiController
         $model = $subtopic->fill($request->all());
         $model->saveOrFail();
 
-        return new SubtopicResource($model);
+        return new JsonResource($model->refresh()->loadMissing($this->relations));
     }
 
     /**

@@ -35,7 +35,7 @@ class EpisodeClaimController extends AbstractApiController
         $claim->user()->associate(User::all()->random());
         $episode->claimed()->save($claim);
 
-        return new JsonResource($claim->refresh());
+        return new JsonResource($claim->refresh()->loadMissing('user', 'episode'));
     }
 
     /**

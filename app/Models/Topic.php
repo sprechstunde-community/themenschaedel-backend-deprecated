@@ -47,11 +47,6 @@ class Topic extends Model
         'user',
     ];
 
-    protected $with = [
-        'user',
-        'subtopics',
-    ];
-
     /**
      * The {@see Episode}, in which this topic gets discussed
      *

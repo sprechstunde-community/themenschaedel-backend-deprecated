@@ -34,10 +34,6 @@ class Subtopic extends Model
         'user',
     ];
 
-    protected $with = [
-        'user',
-    ];
-
     /**
      * The topic, that this is a part of.
      *

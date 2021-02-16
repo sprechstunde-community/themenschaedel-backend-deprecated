@@ -14,6 +14,13 @@ use Throwable;
 
 class EpisodeController extends AbstractApiController
 {
+    private array $relations = [
+        'claimed',
+        'hosts',
+        'topics',
+        'topics.subtopics',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +30,12 @@ class EpisodeController extends AbstractApiController
      */
     public function index(Request $request): JsonResource
     {
-        return EpisodeResource::collection(Episode::paginate($this->getPerPageParameter($request)));
+        return EpisodeResource::collection(
+            Episode::with([
+                'hosts:name,main,profile_picture',
+                'topics:id,episode_id,name',
+            ])->paginate($this->getPerPageParameter($request))
+        );
     }
 
     /**
@@ -39,7 +51,7 @@ class EpisodeController extends AbstractApiController
         $model = (new Episode())->fill($request->all());
         $model->saveOrFail();
 
-        return new EpisodeResource($model);
+        return new EpisodeResource($model->refresh()->loadMissing($this->relations));
     }
 
     /**
@@ -51,7 +63,7 @@ class EpisodeController extends AbstractApiController
      */
     public function show(Episode $episode): JsonResource
     {
-        return new EpisodeResource($episode);
+        return new EpisodeResource($episode->loadMissing($this->relations));
     }
 
     /**
@@ -67,7 +79,7 @@ class EpisodeController extends AbstractApiController
     {
         $episode->fill($request->all());
         $episode->saveOrFail();
-        return new EpisodeResource($episode->getAttributes());
+        return new EpisodeResource($episode->refresh()->loadMissing($this->relations));
     }
 
     /**
@@ -126,7 +138,13 @@ class EpisodeController extends AbstractApiController
         $vote->positive = $direction > 0;
         $vote->episode()->associate($episode);
 
-        return new JsonResource($vote->refresh());
+        return new JsonResource(
+            $vote
+                ->refresh()
+                ->loadMissing([
+                    'episode'
+                ])
+        );
 
     }
 }

@@ -21,8 +21,9 @@ class HostController extends AbstractApiController
      */
     public function index(Request $request): JsonResource
     {
-        return new JsonResource(
-            Host::paginate($this->getPerPageParameter($request))
+        return JsonResource::collection(
+            Host::with([])
+                ->paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -36,8 +37,9 @@ class HostController extends AbstractApiController
      */
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
-        return new JsonResource(
-            Host::where('episode_id', $episode->getKey())
+        return JsonResource::collection(
+            $episode
+                ->hosts()
                 ->paginate($this->getPerPageParameter($request))
         );
     }
