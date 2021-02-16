@@ -16,6 +16,8 @@ class CreateEpisodeHostTable extends Migration
         Schema::create('episode_host', function (Blueprint $table) {
             $table->foreignId('episode_id')->references('id')->on('episodes');
             $table->foreignId('host_id')->references('id')->on('hosts');
+
+            $table->unique(['episode_id', 'host_id']);
         });
     }
 
