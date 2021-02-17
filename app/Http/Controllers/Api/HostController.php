@@ -151,14 +151,14 @@ class HostController extends AbstractApiController
                 'host' => $host->getKey(),
                 'message' => $exception->getMessage(),
             ]);
-        } finally {
-            // return status 500 to indicate failed request
-            return new JsonResponse([
-                'status' => 500,
-                'reason' => 'INTERNAL_SERVER_ERROR',
-                'message' => 'See server logs for additional information',
-            ], 500);
         }
+
+        // return status 500 to indicate failed request
+        return new JsonResponse([
+            'status' => 500,
+            'reason' => 'INTERNAL_SERVER_ERROR',
+            'message' => 'See server logs for additional information',
+        ], 500);
     }
 
     /**
