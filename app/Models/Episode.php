@@ -56,11 +56,6 @@ class Episode extends Model
         'published_at',
     ];
 
-    public function getRouteKeyName()
-    {
-        return 'guid';
-    }
-
     /**
      * List of all {@see Claim}s, that got issued for this episode.
      *
