@@ -36,7 +36,7 @@ class EpisodeController extends AbstractApiController
                     'hosts:name,main,profile_picture',
                     'topics:id,episode_id,name',
                 ])
-                ->ordserBy('episode_number', 'desc')
+                ->orderBy('episode_number', 'desc')
                 ->paginate($this->getPerPageParameter($request))
         );
     }
