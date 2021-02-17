@@ -31,10 +31,13 @@ class EpisodeController extends AbstractApiController
     public function index(Request $request): JsonResource
     {
         return EpisodeResource::collection(
-            Episode::with([
-                'hosts:name,main,profile_picture',
-                'topics:id,episode_id,name',
-            ])->paginate($this->getPerPageParameter($request))
+            Episode::query()
+                ->with([
+                    'hosts:name,main,profile_picture',
+                    'topics:id,episode_id,name',
+                ])
+                ->ordserBy('episode_number', 'desc')
+                ->paginate($this->getPerPageParameter($request))
         );
     }
 
@@ -142,7 +145,7 @@ class EpisodeController extends AbstractApiController
             $vote
                 ->refresh()
                 ->loadMissing([
-                    'episode'
+                    'episode',
                 ])
         );
 
