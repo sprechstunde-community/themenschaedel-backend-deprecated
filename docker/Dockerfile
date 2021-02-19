@@ -59,4 +59,4 @@ USER www
 RUN composer install --no-dev --no-interaction --no-progress --no-cache --verbose
 
 EXPOSE 8080
-CMD ["start", "webserver"]
+ENTRYPOINT ["start", "webserver"]
