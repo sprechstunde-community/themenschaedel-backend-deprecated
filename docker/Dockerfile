@@ -45,6 +45,10 @@ COPY docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 # Change apache port to 8080, because non-root user cannot claim port 80
 RUN sed -s -i -e "s/80/8080/" /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
 
+# Install startup scripts globally
+COPY docker/start.sh /usr/local/bin/start
+RUN chmod a+x /usr/local/bin/start
+
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
 
@@ -55,4 +59,4 @@ USER www
 RUN composer install --no-dev --no-interaction --no-progress --no-cache --verbose
 
 EXPOSE 8080
-CMD ["apache2-foreground"]
+CMD ["start", "webserver"]
