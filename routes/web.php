@@ -10,3 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/auth/{provider}', [AuthController::class, 'auth']);
+Route::get('/auth/{provider}/callback', [AuthController::class, 'callback']);
