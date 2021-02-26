@@ -13,8 +13,10 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
+        "laravel/socialite": "^5.2",
         "laravel/tinker": "^2.5",
-        "lukaswhite/podcast-feed-parser": "^0.0.7"
+        "lukaswhite/podcast-feed-parser": "^0.0.7",
+        "socialiteproviders/reddit": "^4.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

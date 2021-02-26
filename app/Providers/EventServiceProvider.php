@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Reddit\RedditExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,11 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+
+        SocialiteWasCalled::class => [
+            // ... other providers
+            [RedditExtendSocialite::class, 'handle'],
         ],
     ];
 
