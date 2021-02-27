@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Account\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/{provider}', [AuthController::class, 'auth']);

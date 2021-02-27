@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Account;
 
 use App\Models\OAuthCredentials;
 use App\Models\User;
