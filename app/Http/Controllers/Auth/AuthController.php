@@ -57,9 +57,22 @@ class AuthController
             'user_information' => json_encode((array) $oAuth->user ?? null),
         ]);
 
-        // for temporary testing TODO assign actual user model
-        $credentials->user()->associate(User::all()->random());
+        // ensure, that a user exists and is associated
+        if (!$credentials->user()->exists()) {
+            /** @var User $user */
+            $user = new User();
+            $user->forceFill([ // force it so we can set email_verified_at
+                'username' => $oAuth->getNickname(),
+                'email' => $oAuth->getEmail(),
+                'name' => $oAuth->getName(),
+                'email_verified_at' => Carbon::now(),
+            ]);
 
+            $user->save();
+            $credentials->user()->associate($user);
+        }
+
+        // store credentials in database
         $credentials->save();
     }
 }
