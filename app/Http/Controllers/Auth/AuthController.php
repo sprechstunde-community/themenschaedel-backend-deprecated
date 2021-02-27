@@ -6,6 +6,7 @@ use App\Models\OAuthCredentials;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Contracts\User as OAuthUser;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -74,5 +75,10 @@ class AuthController
 
         // store credentials in database
         $credentials->save();
+
+        // login user for this session
+        Auth::login($credentials->user);
+
+        //TODO return view to notify user, that login was successfull and this page can now be closed
     }
 }
