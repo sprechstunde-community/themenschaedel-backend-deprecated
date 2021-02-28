@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username' => 'username',
 
     'email' => 'email',
 
@@ -76,7 +76,7 @@ return [
 
     'prefix' => '',
 
-    'domain' => null,
+    'domain' => 'account.' . parse_url(env('APP_URL'), PHP_URL_HOST) ?? 'localhost',
 
     /*
     |--------------------------------------------------------------------------
