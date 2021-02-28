@@ -14,7 +14,10 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
+        "laravel/jetstream": "^2.2",
+        "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
+        "livewire/livewire": "^2.0",
         "lukaswhite/podcast-feed-parser": "^0.0.7"
     },
     "require-dev": {
