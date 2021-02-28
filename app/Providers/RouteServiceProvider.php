@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/user/profile';
 
     /**
      * The controller namespace for the application.
@@ -41,17 +41,32 @@ class RouteServiceProvider extends ServiceProvider
 
             $domain = parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost';
 
-            Route::domain('api.' . $domain)
-                ->as('api.')
+            Route::as('account.')
+                ->domain('account.' . $domain)
+                ->middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
+
+            Route::as('api.')
+                ->domain('api.' . $domain)
                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
-            Route::domain('auth.' . $domain)
-                ->as('auth.')
-                ->middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
+            // disable frontend routes while generating api auth routes
+            $fortifyViews = config('fortify.views');
+            config()->set('fortify.views', false);
+
+            // generate api auth routes
+            Route::as('api.auth.')
+                ->domain('api.' . $domain)
+                ->namespace('Laravel\Fortify\Http\Controllers')
+                ->prefix('auth')
+                ->group(base_path('vendor/laravel/fortify/routes/routes.php'));
+
+            // restore original config
+            config()->set('fortify.views', $fortifyViews);
+
         });
     }
 
