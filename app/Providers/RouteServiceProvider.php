@@ -41,17 +41,17 @@ class RouteServiceProvider extends ServiceProvider
 
             $domain = parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost';
 
-            Route::domain('api.' . $domain)
-                ->as('api.')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
-
-            Route::domain('account.' . $domain)
-                ->as('account.')
+            Route::as('account.')
+                ->domain('account.' . $domain)
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            Route::as('api.')
+                ->domain('api.' . $domain)
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/api.php'));
 
             // disable frontend routes while generating api auth routes
             $fortifyViews = config('fortify.views');
