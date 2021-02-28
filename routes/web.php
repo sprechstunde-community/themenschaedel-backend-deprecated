@@ -11,7 +11,11 @@
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+use Illuminate\Support\Facades\Route;
+
+Route::redirect('/', \App\Providers\RouteServiceProvider::HOME)->name('home');
+
+//Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//    return view('dashboard');
+//})->name('dashboard');
 
