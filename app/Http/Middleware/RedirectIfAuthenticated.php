@@ -23,6 +23,13 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+
+                // api call
+                if ($request->expectsJson()) {
+                    return response(null, 204);
+                }
+
+                // non-api call
                 return redirect(RouteServiceProvider::HOME);
             }
         }
