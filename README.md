@@ -30,6 +30,7 @@ multiple requests.
 Following http headers are required on each request:
 
 - `Accept: application/json`
+- `Content-Type: application/json`
 - `X-XSRF-TOKEN: TOKEN_HERE` - Only required on non-readonly requests (See [Authentication](#authentication) section on
   how to retrieve this token)
 
