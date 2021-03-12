@@ -7,6 +7,7 @@ use App\Models\Episode;
 use App\Models\User;
 use App\Models\Vote;
 use Exception;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -14,12 +15,22 @@ use Throwable;
 
 class EpisodeController extends AbstractApiController
 {
+    use AuthorizesRequests;
+
     private array $relations = [
         'claimed',
         'hosts',
         'topics',
         'topics.subtopics',
     ];
+
+    /**
+     * EpisodeController constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(EpisodeResource::class, 'episode');
+    }
 
     /**
      * Display a listing of the resource.

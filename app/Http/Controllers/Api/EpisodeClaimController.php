@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Models\Claim;
 use App\Models\Episode;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EpisodeClaimController extends AbstractApiController
 {
+    use AuthorizesRequests;
 
     /**
      * Claim a new episode.
@@ -19,6 +22,7 @@ class EpisodeClaimController extends AbstractApiController
      * @param Request $request
      *
      * @return JsonResponse|JsonResource
+     * @throws AuthorizationException
      */
     public function store(Episode $episode, Request $request)
     {
@@ -28,6 +32,8 @@ class EpisodeClaimController extends AbstractApiController
                 'reason' => 'ALREADY_CLAIMED'
             ], 409);
         }
+
+        $this->authorize('claim', $episode);
 
         $claim = new Claim();
         $claim->claimed_at = now();
@@ -47,7 +53,7 @@ class EpisodeClaimController extends AbstractApiController
      */
     public function destroy(Episode $episode): JsonResponse
     {
-        // TODO return 403 if auth user isn't claiming user
+        $this->authorize('unclaim', $episode);
 
         if (!$episode->claimed instanceof Claim) {
                 return new JsonResponse([
