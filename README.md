@@ -49,4 +49,14 @@ containing the email and password like this:
         "password": "SECRET_PASSWORD"
     }
 
-If the user has 2-factor enabled, an extra step is needed to provide the OTP token.
+If the user has 2-factor enabled, the login endpoint will respond with: `"two_factor": true`.  
+Post the OTP token to `/auth/two-factor-challenge` with a JSON body either containing `"code": "OTP_TOKEN"`
+or `"recovery_code": "RECOVERY_CODE"`.  
+Only then the session will be authenticated.
+
+### Additional Information
+
+The account management and authentication is build upon [Laravel Jetstream](https://github.com/laravel/jetstream) and
+therefore on [Laravel Fortify](https://github.com/laravel/fortify)
+and [Laravel Sanctum](https://github.com/laravel/sanctum).  
+Please refer to those documentations for additional information.
