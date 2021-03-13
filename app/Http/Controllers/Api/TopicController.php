@@ -62,10 +62,10 @@ class TopicController extends AbstractApiController
      */
     public function store(Episode $episode, Request $request): JsonResource
     {
+        // TODO enforce authenticated user
         $topic = new Topic();
         $topic->fill($request->all());
-        // TODO enforce setting user id by authenticated user
-        $topic->user()->associate(User::all()->random());
+        $topic->user()->associate($request->user());
         $episode->topics()->save($topic);
 
         return new JsonResource($topic->refresh()->loadMissing($this->relations));

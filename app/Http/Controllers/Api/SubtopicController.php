@@ -59,10 +59,10 @@ class SubtopicController extends AbstractApiController
      */
     public function store(Topic $topic, Request $request): JsonResource
     {
+        // TODO enforce authenticated user
         $subtopic = new Subtopic();
         $subtopic->fill($request->all());
-        // TODO enforce setting user id by authenticated user
-        $subtopic->user()->associate(User::all()->random());
+        $subtopic->user()->associate($request->user());
         $topic->subtopics()->save($subtopic);
 
         return new JsonResource($subtopic->refresh()->loadMissing($this->relations));
