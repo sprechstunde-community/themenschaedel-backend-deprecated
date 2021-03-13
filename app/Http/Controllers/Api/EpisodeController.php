@@ -29,7 +29,7 @@ class EpisodeController extends AbstractApiController
      */
     public function __construct()
     {
-        $this->authorizeResource(EpisodeResource::class, 'episode');
+        $this->authorizeResource(Episode::class, 'episode');
     }
 
     /**
