@@ -31,7 +31,7 @@ class FlagPolicy
      */
     public function view(User $user, Flag $flag)
     {
-        return Response::deny('Only the system is able to perform this action');
+        return $flag->user->getKey() === $user->getKey();
     }
 
     /**
@@ -42,7 +42,7 @@ class FlagPolicy
      */
     public function create(User $user)
     {
-        return Response::deny('Only the system is able to perform this action');
+        return true;
     }
 
     /**
@@ -54,7 +54,7 @@ class FlagPolicy
      */
     public function update(User $user, Flag $flag)
     {
-        return Response::deny('Only the system is able to perform this action');
+        return $flag->user->getKey() === $user->getKey();
     }
 
     /**
@@ -66,7 +66,7 @@ class FlagPolicy
      */
     public function delete(User $user, Flag $flag)
     {
-        return Response::deny('Only the system is able to perform this action');
+        return $flag->user->getKey() === $user->getKey();
     }
 
     /**
