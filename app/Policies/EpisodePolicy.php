@@ -15,7 +15,7 @@ class EpisodePolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param \App\Models\User|null $user
+     * @param User|null $user
      *
      * @return mixed
      */
@@ -27,8 +27,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param \App\Models\User|null $user
-     * @param \App\Models\Episode $episode
+     * @param User|null $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -40,7 +40,7 @@ class EpisodePolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param \App\Models\User $user
+     * @param User $user
      *
      * @return mixed
      */
@@ -52,8 +52,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Episode $episode
+     * @param User $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -71,8 +71,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Episode $episode
+     * @param User $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -84,8 +84,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Episode $episode
+     * @param User $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -97,8 +97,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Episode $episode
+     * @param User $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -110,8 +110,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can claim the model.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Episode $episode
+     * @param User $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -124,8 +124,8 @@ class EpisodePolicy
     /**
      * Determine whether the user can claim the model.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Episode $episode
+     * @param User $user
+     * @param Episode $episode
      *
      * @return mixed
      */
@@ -133,5 +133,18 @@ class EpisodePolicy
     {
         // only the user claiming the episode is able to release the claim
         return is_null($episode->claimed) || $episode->claimed->user->getKey() === $user->getKey();
+    }
+
+    /**
+     * Determine whether the user can vote for the episode
+     *
+     * @param User $user
+     * @param Episode $episode
+     *
+     * @return bool
+     */
+    public function vote(User $user, Episode $episode): bool
+    {
+        return true; // all logged in users are able to vote
     }
 }

@@ -171,6 +171,8 @@ class EpisodeController extends AbstractApiController
      */
     public function vote(Episode $episode, Request $request)
     {
+        $this->authorize('vote', $episode);
+
         if (!$request->has('direction')) {
             return new JsonResponse([
                 'code' => 400,
