@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\EpisodeClaimController;
 use App\Http\Controllers\Api\EpisodeController;
 use App\Http\Controllers\Api\FlagController;
 use App\Http\Controllers\Api\HostController;
@@ -29,8 +28,8 @@ Route::get('episodes/{episode}/hosts', [HostController::class, 'indexScoped'])->
 Route::post('episodes/{episode}/vote', [EpisodeController::class, 'vote'])->name('episodes.vote');
 
 // episode claims
-Route::post('episodes/{episode}/claim', [EpisodeClaimController::class, 'store'])->name('episodes.claim.store');
-Route::delete('episodes/{episode}/claim', [EpisodeClaimController::class, 'destroy'])->name('episodes.claim.destroy');
+Route::post('episodes/{episode}/claim', [EpisodeController::class, 'claim'])->name('episodes.claim.store');
+Route::delete('episodes/{episode}/claim', [EpisodeController::class, 'unclaim'])->name('episodes.claim.destroy');
 
 // flags
 Route::get('flags', [FlagController::class, 'index'])->name('flags.index');
