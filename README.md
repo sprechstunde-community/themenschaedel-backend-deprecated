@@ -21,6 +21,12 @@ For simplicity, we include a `docker-compose.yml` file, so the initial setup to 
    There is an example file included in this repository called `.env.example`.
 2. Run `docker-compose up -d`-command to start the application.
 
+Environment Variables
+=====================
+
+- `CLAIMS_MAX_AGE` - Defines the timespan (in minutes), that a claim is active. After that period, it will be released
+  again, so that anyone else can claim it. Default is 2 hours.
+
 Interacting with the API
 ========================
 

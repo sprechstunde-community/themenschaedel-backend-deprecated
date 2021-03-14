@@ -231,4 +231,16 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Claims Max Age
+    |--------------------------------------------------------------------------
+    |
+    | This determines the timespan, for which a claim is valid. After that
+    | period passed, it will be released again for anyone else to claim.
+    |
+    */
+
+    'claims_max_age' => env('CLAIMS_MAX_AGE', 120) * 60,
+
 ];
