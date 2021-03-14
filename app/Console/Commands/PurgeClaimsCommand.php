@@ -7,7 +7,7 @@ use App\Services\ClaimManager;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class PurgeClaims extends Command
+class PurgeClaimsCommand extends Command
 {
     /**
      * The name and signature of the console command.
