@@ -1,0 +1,44 @@
+name: Build Docker Image
+
+on:
+  release:
+    types:
+      - created
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Log in to docker registry
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+
+      - name: Build docker image and tag as nightly and with commit hash
+        run: >
+          docker build -f docker/Dockerfile
+          -t ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:nightly
+          -t ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }} .
+
+      - name: Tag with release version
+        if: "github.event.release.tag_name"
+        run: >
+          docker tag ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }}
+          ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.event.release.tag_name }}
+
+      - name: Tag as latest
+        if: github.event.release && ! github.event.release.prerelease
+        run: >
+          docker tag ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }}
+          ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:latest
+
+      - name: Tag as pre-release
+        if: "!!github.event.release.prerelease"
+        run: >
+          docker tag ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }}
+          ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:pre
+
+      - name: Push docker image
+        run: docker push --all-tags ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}
