@@ -41,9 +41,10 @@ class DatasetImporterCommand extends Command
     public function handle()
     {
         // load datasets
-        $datasets = array_values(array_filter(
+        $location = $this->argument('location');
+        $datasets = is_file($location) ? [$location] : array_values(array_filter(
         // list files in directory
-            scandir($this->argument('location')),
+            scandir($location),
             // only include .yml and .yaml files
             fn($filename) => substr($filename, -4) === '.yml' || substr($filename, -5) === '.yaml'
         ));
