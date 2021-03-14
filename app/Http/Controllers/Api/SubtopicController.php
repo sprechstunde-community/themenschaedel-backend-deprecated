@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Subtopic;
 use App\Models\Topic;
-use App\Models\User;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -13,10 +14,17 @@ use Throwable;
 
 class SubtopicController extends AbstractApiController
 {
+    use AuthorizesRequests;
+
     private array $relations = [
         'topic',
         'user',
     ];
+
+    public function __construct()
+    {
+        $this->authorizeResource(Subtopic::class, 'subtopic');
+    }
 
     /**
      * Display a listing of the resource.
@@ -39,9 +47,12 @@ class SubtopicController extends AbstractApiController
      * @param Request $request
      *
      * @return JsonResource
+     * @throws AuthorizationException
      */
     public function indexScoped(Topic $topic, Request $request): JsonResource
     {
+        $this->authorize('viewAny', Subtopic::class);
+
         return JsonResource::collection(
             $topic->subtopics()
                 ->with($this->relations)
@@ -59,7 +70,6 @@ class SubtopicController extends AbstractApiController
      */
     public function store(Topic $topic, Request $request): JsonResource
     {
-        // TODO enforce authenticated user
         $subtopic = new Subtopic();
         $subtopic->fill($request->all());
         $subtopic->user()->associate($request->user());
