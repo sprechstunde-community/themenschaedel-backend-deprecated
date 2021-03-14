@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\EpisodeClaimController;
 use App\Http\Controllers\Api\EpisodeController;
 use App\Http\Controllers\Api\FlagController;
 use App\Http\Controllers\Api\HostController;
 use App\Http\Controllers\Api\SubtopicController;
 use App\Http\Controllers\Api\TopicController;
-use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,17 +18,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// users
-Route::apiResource('users', UserController::class);
-
 // episodes
 Route::apiResource('episodes', EpisodeController::class);
 Route::get('episodes/{episode}/hosts', [HostController::class, 'indexScoped'])->name('episodes.hosts.index');
 Route::post('episodes/{episode}/vote', [EpisodeController::class, 'vote'])->name('episodes.vote');
 
 // episode claims
-Route::post('episodes/{episode}/claim', [EpisodeClaimController::class, 'store'])->name('episodes.claim.store');
-Route::delete('episodes/{episode}/claim', [EpisodeClaimController::class, 'destroy'])->name('episodes.claim.destroy');
+Route::post('episodes/{episode}/claim', [EpisodeController::class, 'claim'])->name('episodes.claim.store');
+Route::delete('episodes/{episode}/claim', [EpisodeController::class, 'unclaim'])->name('episodes.claim.destroy');
 
 // flags
 Route::get('flags', [FlagController::class, 'index'])->name('flags.index');

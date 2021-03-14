@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Episode;
 use App\Models\Topic;
-use App\Models\User;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -13,10 +14,17 @@ use Throwable;
 
 class TopicController extends AbstractApiController
 {
+    use AuthorizesRequests;
+
     private array $relations = [
         'subtopics',
         'user',
     ];
+
+    public function __construct()
+    {
+        $this->authorizeResource(Topic::class, 'topic');
+    }
 
     /**
      * Display a listing of the resource.
@@ -40,9 +48,12 @@ class TopicController extends AbstractApiController
      * @param Request $request
      *
      * @return JsonResource
+     * @throws AuthorizationException
      */
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
+        $this->authorize('viewAny', Topic::class);
+
         return JsonResource::collection(
             $episode
                 ->topics()
@@ -64,8 +75,7 @@ class TopicController extends AbstractApiController
     {
         $topic = new Topic();
         $topic->fill($request->all());
-        // TODO enforce setting user id by authenticated user
-        $topic->user()->associate(User::all()->random());
+        $topic->user()->associate($request->user());
         $episode->topics()->save($topic);
 
         return new JsonResource($topic->refresh()->loadMissing($this->relations));

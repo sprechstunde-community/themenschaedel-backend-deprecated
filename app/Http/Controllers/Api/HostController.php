@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Models\Episode;
 use App\Models\Host;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -15,6 +17,7 @@ use Throwable;
 
 class HostController extends AbstractApiController
 {
+    use AuthorizesRequests;
 
     private ConnectionInterface $db;
     private LoggerInterface $logger;
@@ -27,6 +30,8 @@ class HostController extends AbstractApiController
      */
     public function __construct(ConnectionInterface $connection, LoggerInterface $logger)
     {
+        $this->authorizeResource(Host::class, 'host');
+
         $this->db = $connection;
         $this->logger = $logger;
     }
@@ -53,9 +58,12 @@ class HostController extends AbstractApiController
      * @param Request $request
      *
      * @return JsonResource
+     * @throws AuthorizationException
      */
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
+        $this->authorize('viewAny', Host::class);
+
         return JsonResource::collection(
             $episode
                 ->hosts()
@@ -129,9 +137,12 @@ class HostController extends AbstractApiController
      * @param Episode $episode
      *
      * @return Response|JsonResponse
+     * @throws AuthorizationException
      */
     public function attachEpisode(Host $host, Episode $episode)
     {
+        $this->authorize('update', $host);
+
         $entryExists = $this->db->table('episode_host')
             ->where('episode_id', $episode->getKey())
             ->where('host_id', $host->getKey())
@@ -168,9 +179,11 @@ class HostController extends AbstractApiController
      * @param Episode $episode
      *
      * @return void
+     * @throws AuthorizationException
      */
     public function detachEpisode(Host $host, Episode $episode): void
     {
+        $this->authorize('update', $host);
         // will not throw an exception if the relation does not exist
         $host->episodes()->detach($episode->getKey());
     }

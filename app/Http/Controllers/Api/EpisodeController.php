@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\EpisodeResource;
+use App\Models\Claim;
 use App\Models\Episode;
-use App\Models\User;
 use App\Models\Vote;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -14,12 +16,22 @@ use Throwable;
 
 class EpisodeController extends AbstractApiController
 {
+    use AuthorizesRequests;
+
     private array $relations = [
         'claimed',
         'hosts',
         'topics',
         'topics.subtopics',
     ];
+
+    /**
+     * EpisodeController constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Episode::class, 'episode');
+    }
 
     /**
      * Display a listing of the resource.
@@ -99,6 +111,56 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
+     * Claim a new episode.
+     *
+     * @param Episode $episode
+     * @param Request $request
+     *
+     * @return JsonResponse|JsonResource
+     * @throws AuthorizationException
+     */
+    public function claim(Episode $episode, Request $request)
+    {
+        if ($episode->claimed) {
+            return new JsonResponse([
+                'code' => 409,
+                'reason' => 'ALREADY_CLAIMED',
+            ], 409);
+        }
+
+        $this->authorize('claim', $episode);
+
+        $claim = new Claim();
+        $claim->claimed_at = now();
+        $claim->user()->associate($request->user());
+        $episode->claimed()->save($claim);
+
+        return new JsonResource($claim->refresh()->loadMissing('user', 'episode'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Episode $episode
+     *
+     * @return JsonResponse
+     * @throws AuthorizationException
+     */
+    public function unclaim(Episode $episode): JsonResponse
+    {
+        $this->authorize('unclaim', $episode);
+
+        if (!$episode->claimed instanceof Claim) {
+            return new JsonResponse([
+                'code' => 409,
+                'reason' => 'NOT_YET_CLAIMED',
+            ], 409);
+        }
+
+        return new JsonResponse(null, $episode->claimed()->delete() ? 200 : 500);
+    }
+
+    /**
      * Vote for an episode. Handles up votes, down votes and removal of votes.
      *
      * @param Episode $episode
@@ -109,6 +171,8 @@ class EpisodeController extends AbstractApiController
      */
     public function vote(Episode $episode, Request $request)
     {
+        $this->authorize('vote', $episode);
+
         if (!$request->has('direction')) {
             return new JsonResponse([
                 'code' => 400,
@@ -116,12 +180,8 @@ class EpisodeController extends AbstractApiController
             ], 400);
         }
 
-        // TODO replace placeholder with actual authenticated user model
-        /** @var User $user */
-        $user = User::all()->random();
-
         $direction = (int) $request->input('direction');
-        $vote = $episode->votes()->where('user_id', $user->getKey())->first();
+        $vote = $episode->votes()->where('user_id', $request->user()->getKey())->first();
 
         if ($direction === 0) {
             // Delete vote and return status code

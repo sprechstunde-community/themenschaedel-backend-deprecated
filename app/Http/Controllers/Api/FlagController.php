@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Episode;
 use App\Models\Flag;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,6 +14,12 @@ use Throwable;
 
 class FlagController extends AbstractApiController
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Flag::class, 'flag');
+    }
 
     private array $relations = [
         'episode',
@@ -40,9 +48,12 @@ class FlagController extends AbstractApiController
      * @param Request $request
      *
      * @return JsonResource
+     * @throws AuthorizationException
      */
     public function indexScoped(Episode $episode, Request $request): JsonResource
     {
+        $this->authorize('viewAny', Flag::class);
+
         return new JsonResource(
             $episode->flags()
                 ->with($this->relations)
@@ -91,8 +102,6 @@ class FlagController extends AbstractApiController
      */
     public function update(Request $request, Flag $flag): JsonResource
     {
-        // TODO add check, that user is allowed to modify flag
-
         $flag->fill($request->all());
         $flag->saveOrFail();
 
@@ -109,7 +118,6 @@ class FlagController extends AbstractApiController
      */
     public function destroy(Flag $flag): JsonResponse
     {
-        // TODO add check, that user is allowed to delete the flag
         return new JsonResponse(null, $flag->delete() ? 200 : 500);
     }
 }
