@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Events\EpisodeClaimDropped;
+use App\Events\EpisodeClaimed;
+use App\Models\Claim;
 use App\Models\Episode;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -71,6 +74,8 @@ class ClaimManager
         $episode->claimed = $user;
         $episode->save();
 
+        event(new EpisodeClaimed($episode, $user));
+
         return $episode;
     }
 
@@ -106,8 +111,13 @@ class ClaimManager
      */
     public function forceDrop(Episode $episode): Episode
     {
+        $claim = $episode->claimed;
+        $user = $claim instanceof Claim ? $claim->user : null;
+
         $episode->claimed = null;
         $episode->save();
+
+        event(new EpisodeClaimDropped($episode, $user));
 
         return $episode;
     }
