@@ -61,6 +61,6 @@ class DatabaseSeeder extends Seeder
         // Claiming episodes
         $claimCount = ceil($userCount / 3);
         if ($stdout->isVerbose()) $stdout->text(sprintf('Claiming %d episodes', $claimCount));
-        Claim::factory($claimCount);
+        Claim::factory($claimCount)->create();
     }
 }
