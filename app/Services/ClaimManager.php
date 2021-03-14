@@ -71,11 +71,14 @@ class ClaimManager
      */
     public function forceClaim(Episode $episode, User $user): Episode
     {
-        $episode->claimed = $user;
-        $episode->save();
+        $claim = new Claim();
+        $claim->claimed_at = now();
+        $claim->user()->associate($user);
+
+        $episode->claimed()->save($claim);
+        $episode->refresh();
 
         event(new EpisodeClaimed($episode, $user));
-
         return $episode;
     }
 
@@ -114,8 +117,8 @@ class ClaimManager
         $claim = $episode->claimed;
         $user = $claim instanceof Claim ? $claim->user : null;
 
-        $episode->claimed = null;
-        $episode->save();
+        $episode->claimed()->delete();
+        $episode->refresh();
 
         event(new EpisodeClaimDropped($episode, $user));
 
