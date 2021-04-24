@@ -67,11 +67,19 @@ class DatasetImporterCommand extends Command
         return 0;
     }
 
-    private function import(array $dataset): Episode {
-
-        //TODO check if dataset was already imported and fail if so
-
+    /**
+     * @param array $dataset
+     *
+     * @return Episode
+     * @throws \Exception Thrown when episode has already additional data attached
+     */
+    private function import(array $dataset): Episode
+    {
         $episode = $this->getEpisode($dataset);
+
+        // do not allow to import datasets to already populated episodes
+        // this could cause an exception later on and leave an inconsistent data state
+        if ($episode->topics->count()) throw new \Exception('Episode was already populated before');
 
         $episode->hosts()->detach();
         foreach ($this->getHosts($dataset) as $host) {
