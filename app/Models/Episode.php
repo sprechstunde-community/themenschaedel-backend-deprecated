@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null description
  * @property string|null image
  * @property string|null media_file
- * @property string|null duration
+ * @property int duration
  * @property string|null type
  * @property boolean explicit
  * @property DateTime published_at
