@@ -9,6 +9,7 @@ use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class DatasetImporterCommand extends Command
 {
@@ -38,6 +39,8 @@ class DatasetImporterCommand extends Command
         parent::__construct();
         $this->addArgument('location', InputArgument::OPTIONAL,
             'Importing datasets from yaml files', storage_path('datasets'));
+        $this->addOption('skip-errors', null, InputOption::VALUE_NONE,
+            'Continue importing datasets if a single dataset fails. Failing datasets will be ignored');
     }
 
     /**
@@ -58,10 +61,23 @@ class DatasetImporterCommand extends Command
 
         foreach ($datasets as $filename) {
             if ($this->getOutput()->isVerbose())
-                $this->getOutput()->writeln('<comment>Importing Dataset ' . $filename);
+                $this->getOutput()->writeln('<comment>Importing dataset ' . $filename);
 
             $dataset = yaml_parse_file(is_file($location) ? $location : $location . DIRECTORY_SEPARATOR . $filename);
-            $this->import($dataset);
+            try {
+                $this->import($dataset);
+            } catch (\Exception $ex) {
+                $this->getOutput()->warning('Import failed for dataset ' . $filename);
+
+                if ($this->getOutput()->isVerbose())
+                    $this->getOutput()->writeln('Reason: ' . $ex->getMessage());
+
+                // stop import if not explicitly told otherwise
+                if (!$this->option('skip-errors')) {
+                    break;
+                }
+
+            }
         }
 
         return 0;
