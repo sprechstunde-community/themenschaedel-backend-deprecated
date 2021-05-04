@@ -61,16 +61,21 @@ class DatasetImporterCommand extends Command
 
         foreach ($datasets as $filename) {
             if ($this->getOutput()->isVerbose())
-                $this->getOutput()->writeln('<comment>Importing dataset ' . $filename);
+                $this->getOutput()->writeln('<comment>Importing dataset ' . $filename . '</comment>');
 
             $dataset = yaml_parse_file(is_file($location) ? $location : $location . DIRECTORY_SEPARATOR . $filename);
             try {
                 $this->import($dataset);
             } catch (\Exception $ex) {
-                $this->getOutput()->warning('Import failed for dataset ' . $filename);
+                $this->getOutput()->writeln('<error>Import failed for dataset ' . $filename . '</error>');
 
                 if ($this->getOutput()->isVerbose())
                     $this->getOutput()->writeln('Reason: ' . $ex->getMessage());
+
+                if ($this->getOutput()->isDebug()) {
+                    $this->getOutput()->writeln('File: ' . $ex->getFile() . ':' . $ex->getLine());
+                    $this->getOutput()->writeln('<comment>' . $ex->getTraceAsString() . '</comment>');
+                }
 
                 // stop import if not explicitly told otherwise
                 if (!$this->option('skip-errors')) {
