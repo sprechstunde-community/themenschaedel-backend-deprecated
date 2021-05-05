@@ -105,7 +105,9 @@ class DatasetExporterCommand extends Command
             $this->output->writeln('Exporting ' . basename($filename));
         }
 
+        $contributors = ['johndoe' => 5];
         $dataset = [
+            'username' => null, // set later on but initialized here to be on top
             'guid' => $episode->guid,
             'title' => $episode->title,
         ];
@@ -113,6 +115,11 @@ class DatasetExporterCommand extends Command
         foreach ($episode->topics as $topic) {
             /** @var Topic $topic */
 
+            // track contribution by user
+            if (!array_key_exists($topic->user->username, $contributors)) $contributors[$topic->user->username] = 0;
+            $contributors[$topic->user->username]++;
+
+            // build dataset
             $dataset['topics'][] = [
                 'name' => htmlspecialchars_decode($topic->name),
                 'start' => gmdate("H:i:s", $topic->start),
@@ -123,6 +130,11 @@ class DatasetExporterCommand extends Command
             ];
         }
 
+        // find contributor with most contributions and assign it as the main contributor
+        arsort($contributors);
+        $dataset['username'] = array_key_first($contributors);
+
+        // write dataset file
         yaml_emit_file($filename, $dataset, YAML_UTF8_ENCODING);
     }
 }
