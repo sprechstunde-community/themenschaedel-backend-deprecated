@@ -7,6 +7,7 @@ use App\Models\Host;
 use App\Models\Subtopic;
 use App\Models\Topic;
 use App\Models\User;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
@@ -69,7 +70,7 @@ class DatasetImporterCommand extends Command
                 DB::beginTransaction();
                 $this->import($dataset);
                 DB::commit();
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 $this->getOutput()->writeln('<error>Import failed for dataset ' . $filename . '</error>');
 
                 if ($this->getOutput()->isVerbose())
@@ -97,7 +98,7 @@ class DatasetImporterCommand extends Command
      * @param array $dataset
      *
      * @return Episode
-     * @throws \Exception Thrown when episode has already additional data attached
+     * @throws Exception Thrown when episode has already additional data attached
      */
     private function import(array $dataset): Episode
     {
@@ -105,7 +106,7 @@ class DatasetImporterCommand extends Command
 
         // do not allow to import datasets to already populated episodes
         // this could cause an exception later on and leave an inconsistent data state
-        if ($episode->topics->count()) throw new \Exception('Episode was already populated before');
+        if ($episode->topics->count()) throw new Exception('Episode was already populated before');
 
         $episode->hosts()->detach();
         foreach ($this->getHosts($dataset) as $host) {
@@ -136,13 +137,13 @@ class DatasetImporterCommand extends Command
      * @param array $dataset
      *
      * @return Episode
-     * @throws \Exception
+     * @throws Exception
      */
     private function getEpisode(array $dataset): Episode
     {
 
         if (!array_key_exists('guid', $dataset)) {
-            throw new \Exception('Dataset has no episode GUID');
+            throw new Exception('Dataset has no episode GUID');
         }
 
         return static::$EPISODES[$dataset['guid']] ??= Episode::where(['guid' => $dataset['guid']])->firstOrFail();
@@ -174,10 +175,11 @@ class DatasetImporterCommand extends Command
     }
 
     /**
+     * @param Episode $episode
      * @param array $dataset
      *
-     * @return Topic[]
-     * @throws \Exception
+     * @return Episode
+     * @throws Exception
      */
     private function setTopics(Episode $episode, array $dataset): Episode
     {
@@ -209,12 +211,10 @@ class DatasetImporterCommand extends Command
 
         // add end timestamp
         foreach ($topics as $index => $topic) {
-            $next = $index++;
-
             // fill missing endpoints
-            if (array_key_exists($next, $topics)) {
+            if ($topic = $topics[$index+1] ?? false) {
                 // set end point based on the net topics start point
-                $topic->end ??= $topics[$next]->start;
+                $topic->end ??= $topic->start;
             } else {
                 // last topic; set end point based on episode duration
                 $topic->end ??= $this->getEpisode($dataset)->duration;
@@ -226,10 +226,10 @@ class DatasetImporterCommand extends Command
     }
 
     /**
+     * @param Topic $topic
      * @param array $dataset
      *
-     * @return Topic[]
-     * @throws \Exception
+     * @return Topic
      */
     private function setSubtopics(Topic $topic, array $dataset): Topic
     {
