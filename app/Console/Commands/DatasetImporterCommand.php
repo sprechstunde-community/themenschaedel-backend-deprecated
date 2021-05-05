@@ -8,6 +8,7 @@ use App\Models\Subtopic;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -65,7 +66,9 @@ class DatasetImporterCommand extends Command
 
             $dataset = yaml_parse_file(is_file($location) ? $location : $location . DIRECTORY_SEPARATOR . $filename);
             try {
+                DB::beginTransaction();
                 $this->import($dataset);
+                DB::commit();
             } catch (\Exception $ex) {
                 $this->getOutput()->writeln('<error>Import failed for dataset ' . $filename . '</error>');
 
@@ -76,6 +79,8 @@ class DatasetImporterCommand extends Command
                     $this->getOutput()->writeln('File: ' . $ex->getFile() . ':' . $ex->getLine());
                     $this->getOutput()->writeln('<comment>' . $ex->getTraceAsString() . '</comment>');
                 }
+
+                DB::rollBack();
 
                 // stop import if not explicitly told otherwise
                 if (!$this->option('skip-errors')) {
@@ -107,7 +112,8 @@ class DatasetImporterCommand extends Command
             $episode->hosts()->attach($host);
         }
 
-        $episode->topics()->saveMany($this->getTopics($dataset));
+        $episode = $this->setTopics($episode, $dataset);
+        $episode->topics->each(fn(Topic $topic) => $this->setSubtopics($topic, $dataset));
 
         return $episode;
     }
@@ -173,12 +179,12 @@ class DatasetImporterCommand extends Command
      * @return Topic[]
      * @throws \Exception
      */
-    private function getTopics(array $dataset): array
+    private function setTopics(Episode $episode, array $dataset): Episode
     {
         $topics = $dataset['topics'] ?? [];
 
         // normalize input
-        $topics = array_map(function (array $data) use ($dataset) {
+        $topics = array_map(function (array $data) use ($dataset, $episode) {
 
             // create topic
             $topic = new Topic([
@@ -193,15 +199,7 @@ class DatasetImporterCommand extends Command
 
             // add user relation
             $topic->user()->associate($this->getUser($dataset['username']));
-
-            // attach subtopics
-            foreach ($data['subtopics'] ?? [] as $subtopic) {
-                $subtopic = new Subtopic([
-                    'name' => htmlspecialchars($subtopic),
-                ]);
-                $subtopic->user()->associate($this->getUser($dataset['username']));
-                $subtopic->topic()->associate($topic);
-            }
+            $topic->episode()->associate($episode);
 
             return $topic;
         }, $topics);
@@ -223,7 +221,38 @@ class DatasetImporterCommand extends Command
             }
         }
 
-        return $topics;
+        $episode->topics()->saveMany($topics);
+        return $episode->refresh();
+    }
+
+    /**
+     * @param array $dataset
+     *
+     * @return Topic[]
+     * @throws \Exception
+     */
+    private function setSubtopics(Topic $topic, array $dataset): Topic
+    {
+        // collect subtopics from dataset
+        $data = array_values(array_filter(
+            $dataset['topics'] ?? [],
+            fn(array $data) => $topic->name === htmlspecialchars($data['name'] ?? '')
+        ))[0] ?? [];
+
+        // build subtopic models
+        $subtopics = array_map(function (string $subtopic) use ($dataset, $topic) {
+            $subtopic = new Subtopic([
+                'name' => htmlspecialchars($subtopic),
+            ]);
+            $subtopic->user()->associate($this->getUser($dataset['username']));
+            $subtopic->topic()->associate($topic);
+            return $subtopic;
+        }, $data['subtopics'] ?? []);
+
+        // persist subtopics
+        $topic->subtopics()->saveMany($subtopics);
+
+        return $topic->refresh();
     }
 }
 
