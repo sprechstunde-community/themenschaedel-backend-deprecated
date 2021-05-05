@@ -42,11 +42,13 @@ class DatasetExporterCommand extends Command
 
         // Add command arguments
         $this->addArgument('location', InputArgument::OPTIONAL,
-            'Import datasets as YAML files into this directory', storage_path('datasets'));
+            'Export datasets as YAML files into provided directory', storage_path('datasets'));
 
         // Add command options
         $this->addOption('all', 'a', InputOption::VALUE_NONE,
             'Export all datasets, including those that have no contributed information');
+        $this->addOption('episode', 'e', InputOption::VALUE_REQUIRED,
+            'Export specific dataset, where the episode number matches');
         $this->addOption('force', 'f', InputOption::VALUE_NONE,
             'Export datasets, even if the same file does already exist');
         $this->addOption('prefix', 'p', InputOption::VALUE_OPTIONAL,
@@ -60,9 +62,26 @@ class DatasetExporterCommand extends Command
      */
     public function handle(): int
     {
+
+        // export single dataset if a specific one was requested
+        $episodeNumber = filter_var($this->option('episode'), FILTER_VALIDATE_INT);
+        if ($episodeNumber > 0) {
+            if ($episode = Episode::where(['episode_number' => $episodeNumber])->first()) {
+                $this->export($episode);
+            } else {
+                // print error message if dataset not found
+                $this->output->writeln('<error>Dataset does not exist</error>');
+                return 1;
+            }
+            return 0;
+        }
+
+        // continue to export multiple / all datasets
+
         // eager loading needed relations
         $builder = Episode::with(['hosts', 'topics.subtopics', 'topics.user'])->orderBy('episode_number');
 
+        // limit datasets to those, that have contributed information attached
         if (!$this->option('all')) {
             $builder->whereHas('topics');
         }
