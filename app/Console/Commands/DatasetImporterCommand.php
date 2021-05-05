@@ -29,7 +29,7 @@ class DatasetImporterCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Imports datasets from yaml files';
+    protected $description = 'Imports datasets from YAML files';
 
     /**
      * Create a new command instance.
