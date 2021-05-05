@@ -47,6 +47,8 @@ class DatasetExporterCommand extends Command
         // Add command options
         $this->addOption('all', 'a', InputOption::VALUE_NONE,
             'Export all datasets, including those that have no contributed information');
+        $this->addOption('force', 'f', InputOption::VALUE_NONE,
+            'Export datasets, even if the same file does already exist');
         $this->addOption('prefix', 'p', InputOption::VALUE_OPTIONAL,
             'Filename prefix to use when exporting datasets', 'episode');
     }
@@ -56,7 +58,7 @@ class DatasetExporterCommand extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         // eager loading needed relations
         $builder = Episode::with(['hosts', 'topics.subtopics', 'topics.user'])->orderBy('episode_number');
@@ -72,6 +74,18 @@ class DatasetExporterCommand extends Command
 
     protected function export(Episode $episode): void
     {
+        $filename = $this->argument('location') . DIRECTORY_SEPARATOR . $this->option('prefix')
+            . '-' . $episode->episode_number . '.yml';
+
+        if (file_exists($filename) && $this->option('force')) {
+            $this->output->writeln('Overriding ' . basename($filename));
+        } else if (file_exists($filename)) {
+            $this->output->writeln('<error>Dataset ' . basename($filename) . ' exists already (skipped)</error>');
+            return;
+        } else if ($this->output->isVerbose()) {
+            $this->output->writeln('Exporting ' . basename($filename));
+        }
+
         $dataset = [
             'guid' => $episode->guid,
             'title' => $episode->title,
@@ -89,12 +103,6 @@ class DatasetExporterCommand extends Command
                 'subtopics' => $topic->subtopics()->get('name')->toArray(),
             ];
         }
-
-        $filename = $this->argument('location') . DIRECTORY_SEPARATOR . $this->option('prefix')
-            . '-' . $episode->episode_number . '.yml';
-
-        if ($this->output->isVerbose())
-            $this->output->writeln('Exporting ' . basename($filename));
 
         yaml_emit_file($filename, $dataset, YAML_UTF8_ENCODING);
     }
