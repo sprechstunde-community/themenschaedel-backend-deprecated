@@ -43,6 +43,10 @@ class DatasetExporterCommand extends Command
         // Add command arguments
         $this->addArgument('location', InputArgument::OPTIONAL,
             'Import datasets as YAML files into this directory', storage_path('datasets'));
+
+        // Add command options
+        $this->addOption('all', 'a', InputOption::VALUE_NONE,
+            'Export all datasets, including those that have no contributed information');
         $this->addOption('prefix', 'p', InputOption::VALUE_OPTIONAL,
             'Filename prefix to use when exporting datasets', 'episode');
     }
@@ -54,9 +58,15 @@ class DatasetExporterCommand extends Command
      */
     public function handle()
     {
-        // iterate over database in chunks of 25 episodes, aggregate all needed properties and export each of them
-        Episode::with(['hosts', 'topics.subtopics', 'topics.user'])->orderBy('episode_number')
-            ->chunk(25, fn(Collection $episodes) => $episodes->each(fn(Episode $episode) => $this->export($episode)));
+        // eager loading needed relations
+        $builder = Episode::with(['hosts', 'topics.subtopics', 'topics.user'])->orderBy('episode_number');
+
+        if (!$this->option('all')) {
+            $builder->whereHas('topics');
+        }
+
+        // iterate over database in chunks of 25 episodes and export each of them
+        $builder->chunk(25, fn(Collection $episodes) => $episodes->each(fn(Episode $episode) => $this->export($episode)));
         return 0;
     }
 
