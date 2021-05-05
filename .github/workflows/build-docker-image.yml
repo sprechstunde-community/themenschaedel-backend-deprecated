@@ -1,44 +1,51 @@
 name: Build Docker Image
 
 on:
-  release:
-    types:
-      - created
+  push:
+    tags:
+      - v*
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Log in to docker registry
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
 
-      - name: Build docker image and tag as nightly and with commit hash
-        run: >
-          docker build -f docker/Dockerfile
-          -t ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:nightly
-          -t ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }} .
+      - name: Build docker image with nightly tag
+        run: docker build -f docker/Dockerfile -t ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:nightly .
 
-      - name: Tag with release version
-        if: "github.event.release.tag_name"
+      - name: Tag with git tag
+        if: startsWith(github.ref, 'refs/tags/v')
         run: >
-          docker tag ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }}
-          ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.event.release.tag_name }}
+          docker tag ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:nightly
+          ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:$( echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')
+
+      - name: Tag with major release number from git tag
+        # tag image if git tag does not contain dash-char like v1.0.0
+        if: startsWith(github.ref, 'refs/tags/v') && ! contains(github.ref, '-')
+        run: >
+          docker tag ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:nightly
+          ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:$( echo ${{ github.ref }} | sed -e 's,.*/\(v[0-9]*\).*,\1,' )
 
       - name: Tag as latest
-        if: github.event.release && ! github.event.release.prerelease
+        # tag image if git tag does not contain dash-char like v1.0.0
+        if: startsWith(github.ref, 'refs/tags/v') && ! contains(github.ref, '-')
         run: >
-          docker tag ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }}
-          ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:latest
+          docker tag ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:nightly
+          ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:latest
 
       - name: Tag as pre-release
-        if: "!!github.event.release.prerelease"
+        # tag image if git tag contains a dash-char like v1.0.0-rc.1
+        if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, '-')
         run: >
-          docker tag ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:${{ github.sha }}
-          ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}:pre
+          docker tag ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:nightly
+          ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}:pre
 
       - name: Push docker image
-        run: docker push --all-tags ${{ secrets.DOCKER_USER }}/${{ github.event.repository.name }}
+        run: docker push --all-tags ${{ secrets.DOCKER_REPO }}/${{ github.event.repository.name }}
