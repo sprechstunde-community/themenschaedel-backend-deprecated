@@ -212,9 +212,9 @@ class DatasetImporterCommand extends Command
         // add end timestamp
         foreach ($topics as $index => $topic) {
             // fill missing endpoints
-            if ($topic = $topics[$index+1] ?? false) {
+            if ($next = $topics[$index+1] ?? false) {
                 // set end point based on the net topics start point
-                $topic->end ??= $topic->start;
+                $topic->end ??= $next->start;
             } else {
                 // last topic; set end point based on episode duration
                 $topic->end ??= $this->getEpisode($dataset)->duration;

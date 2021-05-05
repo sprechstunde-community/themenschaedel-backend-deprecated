@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Episode;
+use App\Models\Subtopic;
 use App\Models\Topic;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
@@ -109,7 +110,7 @@ class DatasetExporterCommand extends Command
         $dataset = [
             'username' => null, // set later on but initialized here to be on top
             'guid' => $episode->guid,
-            'title' => $episode->title,
+            'title' => htmlspecialchars_decode($episode->title),
         ];
 
         foreach ($episode->topics as $topic) {
@@ -126,7 +127,8 @@ class DatasetExporterCommand extends Command
                 'end' => gmdate("H:i:s", $topic->end),
                 'ad' => $topic->ad ? 'true' : 'false',
                 'community' => $topic->community_contribution ? 'true' : 'false',
-                'subtopics' => $topic->subtopics()->get('name')->toArray(),
+                'subtopics' => $topic->subtopics()->get('name')
+                    ->map(fn(Subtopic $subtopic) => htmlspecialchars_decode($subtopic->name))->toArray(),
             ];
         }
 
