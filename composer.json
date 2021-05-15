@@ -13,6 +13,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "http-interop/http-factory-guzzle": "^1.0",
         "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
         "laravel/jetstream": "^2.2",
@@ -20,7 +21,8 @@
         "laravel/scout": "^9.1",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.0",
-        "lukaswhite/podcast-feed-parser": "^0.0.7"
+        "lukaswhite/podcast-feed-parser": "^0.0.7",
+        "meilisearch/meilisearch-php": "^0.18.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
