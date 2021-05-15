@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-yaml": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -16,10 +17,10 @@
         "laravel/framework": "^8.12",
         "laravel/jetstream": "^2.2",
         "laravel/sanctum": "^2.6",
+        "laravel/scout": "^9.1",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.0",
-        "lukaswhite/podcast-feed-parser": "^0.0.7",
-        "ext-yaml": "*"
+        "lukaswhite/podcast-feed-parser": "^0.0.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
