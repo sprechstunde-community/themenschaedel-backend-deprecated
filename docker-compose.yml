@@ -81,6 +81,16 @@ services:
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
 
+  search:
+    image: getmeili/meilisearch:latest
+    ports:
+      - '${FORWARD_SEARCH_PORT:-7700}:7700'
+    volumes:
+      - search:/data.ms
+    networks:
+      - themenschaedel
+    restart: unless-stopped
+
   mailhog:
     image: mailhog/mailhog:latest
     ports:
@@ -96,4 +106,6 @@ volumes:
   mysql:
     driver: local
   redis:
+    driver: local
+  search:
     driver: local
