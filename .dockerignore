@@ -1,4 +1,13 @@
+.env
 .idea
 .git
+.github
 .gitignore
+bootstrap/cache
+docker
+docker-compose.yml
+storage/datasets
+storage/framework
+storage/logs
+tests
 vendor
