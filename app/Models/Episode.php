@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Scout\Searchable;
 
 /**
  * An episode of the podcast.
@@ -38,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Episode extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $perPage = 25;
 
