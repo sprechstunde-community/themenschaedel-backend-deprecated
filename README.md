@@ -46,7 +46,7 @@ Authentication
 To authenticate to the api, you have to follow some steps:
 
 First Load CSRF-Token - This token has to be provided on any request on any non-readonly requests in the `X-XSRF-TOKEN`
-http header. You can get it by making a `GET` repuest to the `/sanctum/csrf-token` endpoint.
+http header. You can get it by making a `GET` repuest to the `/sanctum/csrf-cookie` endpoint.
 
 After that, you can authenticate your user by making a `POST` request to the `/auth/login` endpoint with a JSON body
 containing the email and password like this:

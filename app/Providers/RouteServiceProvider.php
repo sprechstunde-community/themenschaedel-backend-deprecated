@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    public static final function getAccountDomain(): string
+    {
+        return 'account.' . static::getBaseDomain();
+    }
+
+    public static final function getApiDomain(): string
+    {
+        return 'api.' . static::getBaseDomain();
+    }
+
+    public static final function getBaseDomain(): string
+    {
+        return parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost';
+    }
+
     /**
      * The path to the "home" route for your application.
      *
@@ -39,16 +54,14 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
 
-            $domain = parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost';
-
             Route::as('account.')
-                ->domain('account.' . $domain)
+                ->domain(static::getAccountDomain())
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
             Route::as('api.')
-                ->domain('api.' . $domain)
+                ->domain(static::getAPiDomain())
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
@@ -59,7 +72,7 @@ class RouteServiceProvider extends ServiceProvider
 
             // generate api auth routes
             Route::as('api.auth.')
-                ->domain('api.' . $domain)
+                ->domain(static::getAPiDomain())
                 ->namespace('Laravel\Fortify\Http\Controllers')
                 ->prefix('auth')
                 ->group(base_path('vendor/laravel/fortify/routes/routes.php'));

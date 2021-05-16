@@ -25,7 +25,9 @@ class EmailVerificationTest extends TestCase
             'email_verified_at' => null,
         ]);
 
-        $response = $this->actingAs($user)->get('/email/verify');
+        // only rendered on specific subdomain
+        $url = 'https://' . RouteServiceProvider::getAccountDomain() . '/email/verify';
+        $response = $this->actingAs($user)->get($url);
 
         $response->assertStatus(200);
     }
