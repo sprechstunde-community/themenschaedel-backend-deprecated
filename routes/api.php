@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\EpisodeController;
 use App\Http\Controllers\Api\FlagController;
 use App\Http\Controllers\Api\HostController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SubtopicController;
 use App\Http\Controllers\Api\TopicController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// search
+Route::get('search/episodes', [SearchController::class, 'episodes'])->name('search.episodes');
+Route::get('search/topics', [SearchController::class, 'topics'])->name('search.topics');
+Route::get('search/subtopics', [SearchController::class, 'subtopics'])->name('search.subtopics');
 
 // episodes
 Route::apiResource('episodes', EpisodeController::class);
