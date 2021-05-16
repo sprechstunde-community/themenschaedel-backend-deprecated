@@ -3,10 +3,8 @@
 .git
 .github
 .gitignore
-bootstrap/cache
 docker-compose.yml
 storage/datasets
-storage/framework
-storage/logs
+storage/logs/*
 tests
 vendor
