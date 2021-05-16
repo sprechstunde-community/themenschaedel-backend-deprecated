@@ -4,7 +4,6 @@
 .github
 .gitignore
 bootstrap/cache
-docker
 docker-compose.yml
 storage/datasets
 storage/framework
