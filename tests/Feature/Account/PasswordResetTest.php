@@ -1,20 +1,19 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Account;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Tests\TestCase;
 
-class PasswordResetTest extends TestCase
+class PasswordResetTest extends AccountTestCase
 {
     use RefreshDatabase;
 
     public function test_reset_password_link_screen_can_be_rendered()
     {
-        $response = $this->get('/forgot-password');
+        $response = $this->get($this->baseUrl() . '/forgot-password');
 
         $response->assertStatus(200);
     }
@@ -25,7 +24,7 @@ class PasswordResetTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post('/forgot-password', [
+        $response = $this->post($this->baseUrl() . '/forgot-password', [
             'email' => $user->email,
         ]);
 
@@ -38,7 +37,7 @@ class PasswordResetTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post('/forgot-password', [
+        $response = $this->post($this->baseUrl() . '/forgot-password', [
             'email' => $user->email,
         ]);
 
@@ -57,7 +56,7 @@ class PasswordResetTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post('/forgot-password', [
+        $response = $this->post($this->baseUrl() . '/forgot-password', [
             'email' => $user->email,
         ]);
 
