@@ -116,4 +116,18 @@ class Episode extends Model
     {
         return $this->hasMany(Vote::class);
     }
+
+    public function toSearchableArray()
+    {
+        $data = $this->toArray();
+
+        unset($data['duration']);
+        unset($data['created_at']);
+        unset($data['updated_at']);
+
+        $data['explicit'] = $this->explicit ? 'explicit' : null;
+
+        return $data;
+    }
+
 }

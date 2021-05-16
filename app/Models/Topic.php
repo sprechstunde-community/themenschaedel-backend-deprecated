@@ -77,4 +77,16 @@ class Topic extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->getKey(),
+            'episode_id' => $this->episode_id,
+            'name' => $this->name,
+            'ad' => $this->ad ? 'advertisement' : null,
+            'community_contribution' => $this->community_contribution ? 'community contribution' : null,
+        ];
+    }
+
 }

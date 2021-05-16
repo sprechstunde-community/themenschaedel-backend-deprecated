@@ -54,4 +54,26 @@ class Subtopic extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->getKey(),
+            'episode_id' => $this->topic->episode->getKey(),
+            'topic_id' => $this->topic->getKey(),
+            'name' => $this->name,
+        ];
+    }
+
+    /**
+     * Modify the query used to retrieve models when making all of the models searchable.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function makeAllSearchableUsing($query)
+    {
+        return $query->with('topic.episode');
+    }
+
 }
