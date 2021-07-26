@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Episode;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Console\OutputStyle;
@@ -44,9 +45,8 @@ class PodcastEpisodesImporterJob implements ShouldQueue
      * @throws InvalidXmlException
      * @throws Exception
      */
-    public function handle(Client $client, Parser $parser)
+    public function handle(ClientInterface $client, Parser $parser)
     {
-
         // download rss feed
         $response = $client->get(config('services.podcasts.rss_feed'));
         $feed = $parser->setContent($response->getBody()->getContents())->run();

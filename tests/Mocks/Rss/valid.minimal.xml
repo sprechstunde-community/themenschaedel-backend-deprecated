@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:acast="https://schema.acast.com/1.0/">
+    <channel>
+        <title>Die Sprechstunde 🎙️</title>
+        <link>https://www.reddit.com/r/Sprechstunde/</link>
+        <language>de</language>
+        <copyright>2019 - 2021 Sprechstunde</copyright>
+        <description>
+            <![CDATA[Die Sprechstunde mit LeFloid, Olli &amp; Paul ist euer Podcast zum Lachen, Diskutieren &amp; Mitmachen! Den Themen sind keine Grenzen gesetzt und wir sprechen gemeinsam über Alles, was unser Herz bewegt, unsere Nackenhaare aufstellt, uns aufregt oder erfreut... Themen, die ihr mitbestimmen könnt! Wendet euch gern an uns! Am besten in unserem Reddit auf <a href="https://www.reddit.com/r/Sprechstunde/" rel="noopener noreferrer" target="_blank">sprechstunde.reddit.com</a></p><br /><hr><p style='color:grey; font-size:0.75em;'> See <a style='color:grey;' target='_blank' rel='noopener noreferrer' href='https://acast.com/privacy'>acast.com/privacy</a> for privacy and opt-out information.]]>
+        </description>
+        <image>
+            <url>https://assets.pippa.io/shows/60ddbc617c3018e3a69a190a/show-cover.jpg</url>
+            <link>https://www.reddit.com/r/Sprechstunde/</link>
+            <title>Die Sprechstunde 🎙️</title>
+        </image>
+        <item>
+            <title>Einfach mal verlassen werden! 💔</title>
+            <itunes:title>Einfach mal verlassen werden! 💔</itunes:title>
+            <pubDate>Sun, 25 Jul 2021 17:03:46 GMT</pubDate>
+            <itunes:duration>1:05:52</itunes:duration>
+            <enclosure url="https://sphinx.acast.com/p/acast/s/die-sprechstunde/e/60fd965a66839900139673f8/media.mp3"
+                       length="94722220" type="audio/mpeg"/>
+            <guid isPermaLink="false">60fd965a66839900139673f8</guid>
+            <itunes:explicit>no</itunes:explicit>
+            <link>https://shows.acast.com/die-sprechstunde/episodes/einfach-mal-verlassen-werden</link>
+            <acast:episodeId>60fd965a66839900139673f8</acast:episodeId>
+            <acast:episodeUrl>einfach-mal-verlassen-werden</acast:episodeUrl>
+            <acast:settings>
+                <![CDATA[RGn6g3TSMb5ZUeR9TU4kpnsp5PgNkB6/wPRMDgPO9Eog02XtQVYg6iaTGoIaMv83kndfCkNwojLzLXaReJeNiq/+ye4Xo0i1Uo6dyEKVY6t/mIlVlRihMbYGOLgkyL5LVp5nlAlwJugxU5aWu7FcIROisRjWFCMdnLMr21nz2YzNtltWCashxaREnJLptB9BduAFpeGbJH4e//39bninodwaZ0ewRwi3Bh2aR1R0nBvdznRAsiOP1FWF1bsFembMgv3IKO3MufZqny/Mg5mBvtjr+woRaI50Or7QIJON/cUwSBDA2Sah3jOXoLZd4rzJVDk9ix9noGI3zaQlRA2q5vY074AOBB2NvE8OlJyJ1zHluYkNGXruGR6kjWH2BDdMD0eIgj0ULV84zThLaSNY5/2BedS0J/MdyvEyInS7/6RfRsxinOXaNdhY/nYGvP+QJiZBRYQBkLcMzRzFGz0Zjdq8H8//KlYFvgAG61kOYVACFzNaF0Al5NYoh1f9QvW4B6NzcUarOGjuYK+Jjk/6zv4x3FRcN/tD4g3WL+w+zccS9uoy2jyFOLYacXKzsW5o]]>
+            </acast:settings>
+            <itunes:episodeType>full</itunes:episodeType>
+            <itunes:episode>242</itunes:episode>
+            <itunes:image
+                href="https://assets.pippa.io/shows/60ddbc617c3018e3a69a190a/1627231822171-895ea6da081137c25d1b5f936d5abb11.jpeg"/>
+            <description>
+                <![CDATA[Vielen Dank an den Sponsor dieser Sprechstunde: Koro! Schnappt euch 5% Rabatt auf <a href="https://korodrogerie.de/" rel="noopener noreferrer" target="_blank">https://korodrogerie.de</a> mit dem Code SPRECHSTUNDE und gönnt euch leckeres Superfood, Snacks und vieles mehr! Feedback, Diskussionen und Rückfragen beantworten wir in unserer Reddit-Community: <a href="https://www.reddit.com/r/Sprechstunde/%C2%A0" rel="noopener noreferrer" target="_blank">https://www.reddit.com/r/Sprechstunde/</a><br /><hr><p style='color:grey; font-size:0.75em;'> See <a style='color:grey;' target='_blank' rel='noopener noreferrer' href='https://acast.com/privacy'>acast.com/privacy</a> for privacy and opt-out information.</p>]]>
+            </description>
+            <itunes:summary>
+                <![CDATA[Vielen Dank an den Sponsor dieser Sprechstunde: Koro! Schnappt euch 5% Rabatt auf <a href="https://korodrogerie.de/" rel="noopener noreferrer" target="_blank">https://korodrogerie.de</a> mit dem Code SPRECHSTUNDE und gönnt euch leckeres Superfood, Snacks und vieles mehr! Feedback, Diskussionen und Rückfragen beantworten wir in unserer Reddit-Community: <a href="https://www.reddit.com/r/Sprechstunde/%C2%A0" rel="noopener noreferrer" target="_blank">https://www.reddit.com/r/Sprechstunde/</a><br /><hr><p style='color:grey; font-size:0.75em;'> See <a style='color:grey;' target='_blank' rel='noopener noreferrer' href='https://acast.com/privacy'>acast.com/privacy</a> for privacy and opt-out information.</p>]]>
+            </itunes:summary>
+        </item>
+    </channel>
+</rss>
