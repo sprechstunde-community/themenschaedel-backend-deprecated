@@ -106,7 +106,7 @@ class PodcastEpisodesImporterJob implements ShouldQueue
     private function calculateTimespan(string $time): int
     {
         // Parse input string
-        preg_match('/(?<hours>\d{2}):(?<minutes>\d{2}):(?<seconds>\d{2})/', $time, $matches);
+        preg_match('/(?<hours>\d{1,2}:)(?<minutes>\d{2}):(?<seconds>\d{2})/', $time, $matches);
 
         $time = (int) $matches['seconds']; // Add seconds
         $time += 60 * (int) $matches['minutes']; // Add minutes as Seconds
