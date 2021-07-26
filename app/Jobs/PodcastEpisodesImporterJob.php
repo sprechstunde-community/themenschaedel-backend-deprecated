@@ -62,7 +62,6 @@ class PodcastEpisodesImporterJob implements ShouldQueue
          * @var PodcastEpisode $feedItem
          */
         foreach ($feedItems->getIterator() as $feedItem) {
-
             // search for existing episodes with the same uuid
             /**
              * @var $episode Episode
@@ -73,7 +72,6 @@ class PodcastEpisodesImporterJob implements ShouldQueue
 
             // only import if episode wasn't already imported
             if (!$episode->exists) {
-
                 // map feed to model
                 $episode->fill([
                     'guid' => $feedItem->getGuid(),
@@ -93,7 +91,7 @@ class PodcastEpisodesImporterJob implements ShouldQueue
 
                 // show progress
                 if ($progress) {
-                    $progress->advance((int) $success);
+                    $progress->advance((int)$success);
                 }
             }
         }
@@ -103,14 +101,24 @@ class PodcastEpisodesImporterJob implements ShouldQueue
         }
     }
 
+    /** @throws Exception Failed to parse timestamp */
     private function calculateTimespan(string $time): int
     {
-        // Parse input string
-        preg_match('/(?<hours>\d{1,2}:)(?<minutes>\d{2}):(?<seconds>\d{2})/', $time, $matches);
+        // parse timestamp
+        $segments = explode(':', $time);
+        // start with lowest unit (seconds)
+        $segments = array_reverse($segments);
 
-        $time = (int) $matches['seconds']; // Add seconds
-        $time += 60 * (int) $matches['minutes']; // Add minutes as Seconds
-        $time += 60 * 60 * (int) $matches['hours']; // Add hours as Seconds
+        if (count($segments) > 3) {
+            throw new Exception('Timestamps with segments above `hours` is not supported');
+        }
+
+        $time = 0;
+        $multiplier = 1;
+        foreach ($segments as $segment) {
+            $time += $multiplier * (int)$segment;
+            $multiplier *= 60;
+        }
 
         return $time;
     }
