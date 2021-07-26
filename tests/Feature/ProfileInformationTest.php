@@ -27,7 +27,12 @@ class ProfileInformationTest extends TestCase
         $this->actingAs($user = User::factory()->create());
 
         Livewire::test(UpdateProfileInformationForm::class)
-                ->set('state', ['name' => 'Test Name', 'email' => 'test@example.com'])
+                ->set('state', [
+                    'username' => $user->username,
+                    'name' => 'Test Name',
+                    'email' => 'test@example.com',
+                    'description' => '',
+                ])
                 ->call('updateProfileInformation');
 
         $this->assertEquals('Test Name', $user->fresh()->name);
