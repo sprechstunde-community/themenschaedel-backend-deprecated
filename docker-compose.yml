@@ -1,55 +1,40 @@
-# For more information: https://laravel.com/docs/sail
 version: '3'
-services:
 
+x-backend-common: &backend-common
+  image: themenschaedel/backend:dev
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+  depends_on:
+    - mysql
+    - redis
+  environment:
+    WWWUSER: '${WWWUSER}'
+  volumes:
+    - '.:/var/www'
+  env_file: ./.env
+  networks:
+    - themenschaedel
+  restart: unless-stopped
+
+services:
   app:
-    image: themenschaedel/backend:dev
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    depends_on:
-      - mysql
-      - redis
-    environment:
-      WWWUSER: '${WWWUSER}'
-    #        volumes:
-    #            - '.:/var/www/html'
-    env_file: ./.env
-    networks:
-      - themenschaedel
+    <<: *backend-common
     ports:
       - '${APP_PORT:-80}:8080'
-    restart: unless-stopped
 
   scheduler:
-    image: themenschaedel/backend:dev
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+    <<: *backend-common
     entrypoint: start scheduler
     depends_on:
       - app
-      - mysql
-      - redis
-    env_file: ./.env
-    networks:
-      - themenschaedel
-    restart: unless-stopped
 
   worker:
-    image: themenschaedel/backend:dev
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+    <<: *backend-common
+    restart: unless-stopped
     entrypoint: start worker
     depends_on:
       - app
-      - mysql
-      - redis
-    env_file: ./.env
-    networks:
-      - themenschaedel
-    restart: unless-stopped
 
   mysql:
     image: mysql:8.0
