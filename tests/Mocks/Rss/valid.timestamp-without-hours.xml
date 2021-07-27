@@ -13,6 +13,7 @@
             <pubDate>Sun, 25 Jul 2021 17:03:46 GMT</pubDate>
             <itunes:duration>55:52</itunes:duration>
             <guid isPermaLink="false">60fd965a66839900139673f8</guid>
+            <link>https://www.example.com/item</link>
         </item>
     </channel>
 </rss>
