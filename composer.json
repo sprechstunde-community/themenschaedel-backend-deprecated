@@ -23,7 +23,8 @@
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.0",
         "lukaswhite/podcast-feed-parser": "^0.0.7",
-        "meilisearch/meilisearch-php": "^0.18.0"
+        "meilisearch/meilisearch-php": "^0.18.0",
+        "simplepie/simplepie": "^1.5.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
