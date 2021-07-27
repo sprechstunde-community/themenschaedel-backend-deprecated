@@ -33,6 +33,10 @@ jobs:
       - name: Install Composer dependencies
         run: composer update --prefer-dist --no-interaction --no-progress --prefer-${{ matrix.stability }}
 
+      - name: Generate Application Key
+        run: php artisan key:generate
+
       - name: Run Test Suite
         run: php artisan test
-
+        env:
+          APP_URL: http://localhost
