@@ -30,6 +30,32 @@ class DatasetImportTest extends TestCase
         $this->assertNotEmpty($this->episode->topics[0]->subtopics, 'Failed to attach subtopics to topics');
     }
 
+    /** @depends test_import_populates_database */
+    public function test_import_fails_when_already_imported()
+    {
+        $dataset = $this->createYamlMock($this->episode->guid, static::USERNAME);
+        $this->populateDatasetMock($dataset);
+
+        $this->artisan('datasets:import ' . $this->getDatasetMockPath())
+            ->assertExitCode(0);
+
+        $this->artisan('datasets:import ' . $this->getDatasetMockPath())
+            ->assertExitCode(1);
+    }
+
+    /** @depends test_import_fails_when_already_imported */
+    public function test_import_can_skip_fails_when_already_imported()
+    {
+        $dataset = $this->createYamlMock($this->episode->guid, static::USERNAME);
+        $this->populateDatasetMock($dataset);
+
+        $this->artisan('datasets:import ' . $this->getDatasetMockPath())
+            ->assertExitCode(0);
+
+        $this->artisan('datasets:import --skip-errors ' . $this->getDatasetMockPath())
+            ->assertExitCode(0);
+    }
+
     public function test_import_fails_when_user_missing()
     {
         $dataset = $this->createYamlMock($this->episode->guid, 'username-that-definitely-does-not-exist');
