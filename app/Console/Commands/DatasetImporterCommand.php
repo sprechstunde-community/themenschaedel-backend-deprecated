@@ -85,7 +85,7 @@ class DatasetImporterCommand extends Command
 
                 // stop import if not explicitly told otherwise
                 if (!$this->option('skip-errors')) {
-                    break;
+                    return 1;
                 }
 
             }
