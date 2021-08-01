@@ -5,11 +5,10 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Routing\Route;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
 use Tests\TestCase;
 
-class ApiAuthenticationTest extends TestCase
+class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,7 +16,7 @@ class ApiAuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->json('POST', 'https://' . RouteServiceProvider::getApiDomain() . '/auth/login', [
+        $response = $this->json('POST', 'https://' . RouteServiceProvider::getAccountDomain() . '/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -34,7 +33,7 @@ class ApiAuthenticationTest extends TestCase
         $recoveryKey = json_decode(decrypt($user->two_factor_recovery_codes))[0];
         $user->save();
 
-        $response = $this->json('POST', 'https://' . RouteServiceProvider::getApiDomain() . '/auth/login', [
+        $response = $this->json('POST', 'https://' . RouteServiceProvider::getAccountDomain() . '/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -42,8 +41,8 @@ class ApiAuthenticationTest extends TestCase
         $response->assertOk();
         $response->assertJson(['two_factor' => true]);
 
-        $response = $this->json('POST', 'https://' . RouteServiceProvider::getApiDomain()
-            . '/auth/two-factor-challenge', [
+        $response = $this->json('POST', 'https://' . RouteServiceProvider::getAccountDomain()
+            . '/two-factor-challenge', [
             'recovery_code' => $recoveryKey,
         ]);
 
