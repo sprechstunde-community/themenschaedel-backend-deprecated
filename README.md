@@ -37,29 +37,26 @@ Following http headers are required on each request:
 
 - `Accept: application/json`
 - `Content-Type: application/json`
-- `X-XSRF-TOKEN: TOKEN_HERE` - Only required on non-readonly requests (See [Authentication](#authentication) section on
-  how to retrieve this token)
 
 Authentication
 --------------
 
-To authenticate to the api, you have to follow some steps:
-
-First Load CSRF-Token - This token has to be provided on any request on any non-readonly requests in the `X-XSRF-TOKEN`
-http header. You can get it by making a `GET` repuest to the `/sanctum/csrf-cookie` endpoint.
-
-After that, you can authenticate your user by making a `POST` request to the `/auth/login` endpoint with a JSON body
-containing the email and password like this:
+To authenticate to the api, make a `POST` request to the `/login` endpoint with a JSON body containing the username and
+password like this:
 
     {
-        "email": "user@example.net",
+        "username": "j.doe",
         "password": "SECRET_PASSWORD"
     }
 
-If the user has 2-factor enabled, the login endpoint will respond with: `"two_factor": true`.  
-Post the OTP token to `/auth/two-factor-challenge` with a JSON body either containing `"code": "OTP_TOKEN"`
-or `"recovery_code": "RECOVERY_CODE"`.  
-Only then the session will be authenticated.
+The server will respond with a new bearer token, that has to be sent in the `Authorization`-header in each request,
+that requires authentication. 
+
+To log out (destroying the token) send a `DELETE` request to `/logout` like so:
+
+```bash
+curl -X DELETE -H "Accept: application/json" -H "Authorization: Bearer YOUR_TOKEN" https://api.example.com/logout  
+``` 
 
 ### Additional Information
 
