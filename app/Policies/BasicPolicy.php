@@ -58,7 +58,7 @@ class BasicPolicy
      */
     public function update(User $user, Model $model)
     {
-        return true;
+        return $this->isOwner($user, $model);
     }
 
     /**
@@ -71,8 +71,7 @@ class BasicPolicy
      */
     public function delete(User $user, Model $model)
     {
-        return (property_exists($model, 'user') && $model->user instanceof User
-            && $model->user->getKey() === $user->getKey()) ?: Response::deny('You do not own the resource');
+        return $this->isOwner($user, $model);
     }
 
     /**
@@ -99,5 +98,11 @@ class BasicPolicy
     public function forceDelete(User $user, Model $model)
     {
         return Response::deny('Only the system is able to perform this action');
+    }
+
+    protected function isOwner(User $user, Model $model)
+    {
+        return (($model->user ?? null) instanceof User && $model->user->getKey() === $user->getKey())
+            ?: Response::deny('You do not own the resource');
     }
 }
