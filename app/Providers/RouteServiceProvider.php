@@ -62,23 +62,9 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::as('api.')
                 ->domain(static::getAPiDomain())
-                ->middleware('web')
+                ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
-
-            // disable frontend routes while generating api auth routes
-            $fortifyViews = config('fortify.views');
-            config()->set('fortify.views', false);
-
-            // generate api auth routes
-            Route::as('api.auth.')
-                ->domain(static::getAPiDomain())
-                ->namespace('Laravel\Fortify\Http\Controllers')
-                ->prefix('auth')
-                ->group(base_path('vendor/laravel/fortify/routes/routes.php'));
-
-            // restore original config
-            config()->set('fortify.views', $fortifyViews);
 
         });
     }

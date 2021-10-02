@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\HostController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SubtopicController;
 use App\Http\Controllers\Api\TopicController;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,14 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// authentication
+Route::post('register', [AuthController::class, 'register'])->name('user.register');
+Route::post('login', [AuthController::class, 'login'])->name('user.login');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('logout', [AuthController::class, 'logout'])->name('user.logout');
+    Route::delete('logout/all', [AuthController::class, 'reset'])->name('user.logout.everywhere');
+});
 
 // search
 Route::get('search/episodes', [SearchController::class, 'episodes'])->name('search.episodes');

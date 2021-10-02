@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
+use Laravel\Fortify\Features;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -28,6 +29,10 @@ class AuthenticationTest extends TestCase
 
     public function test_users_with_2fa_can_authenticate()
     {
+        if (!Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('2FA support is not enabled.');
+        }
+
         $user = User::factory()->create();
         $this->app->make(EnableTwoFactorAuthentication::class)($user);
         $recoveryKey = json_decode(decrypt($user->two_factor_recovery_codes))[0];
