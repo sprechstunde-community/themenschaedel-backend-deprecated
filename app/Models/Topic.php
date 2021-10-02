@@ -30,6 +30,15 @@ class Topic extends Model
 {
     use HasFactory, Searchable;
 
+    protected $casts = [
+        'episode_id' => 'integer',
+        'user_id' => 'integer',
+        'start' => 'integer',
+        'end' => 'integer',
+        'ad' => 'boolean',
+        'community_contribution' => 'boolean',
+    ];
+
     protected $fillable = [
         'name',
         'start',
