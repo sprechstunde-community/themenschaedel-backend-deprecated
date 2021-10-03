@@ -21,11 +21,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 // authentication
-Route::post('register', [AuthController::class, 'register'])->name('user.register');
-Route::post('login', [AuthController::class, 'login'])->name('user.login');
+Route::post('auth/register', [AuthController::class, 'register'])->name('user.register');
+Route::post('auth/login', [AuthController::class, 'login'])->name('user.login');
 Route::middleware('auth:sanctum')->group(function () {
-    Route::delete('logout', [AuthController::class, 'logout'])->name('user.logout');
-    Route::delete('logout/all', [AuthController::class, 'reset'])->name('user.logout.everywhere');
+    Route::delete('auth/logout', [AuthController::class, 'logout'])->name('user.logout');
+    Route::delete('auth/logout/all', [AuthController::class, 'reset'])->name('user.logout.everywhere');
 });
 
 // search

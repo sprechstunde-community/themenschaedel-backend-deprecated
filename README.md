@@ -41,7 +41,7 @@ Following http headers are required on each request:
 Authentication
 --------------
 
-To authenticate to the api, make a `POST` request to the `/login` endpoint with a JSON body containing the username and
+To authenticate to the api, make a `POST` request to the `/auth/login` endpoint with a JSON body containing the username and
 password like this:
 
     {
@@ -52,7 +52,7 @@ password like this:
 The server will respond with a new bearer token, that has to be sent in the `Authorization`-header in each request,
 that requires authentication. 
 
-To log out (destroying the token) send a `DELETE` request to `/logout` like so:
+To log out (destroying the token) send a `DELETE` request to `/auth/logout` like so:
 
 ```bash
 curl -X DELETE -H "Accept: application/json" -H "Authorization: Bearer YOUR_TOKEN" https://api.example.com/logout  
