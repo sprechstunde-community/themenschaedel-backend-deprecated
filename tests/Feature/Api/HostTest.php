@@ -8,9 +8,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Tests\Traits\AssertableJson\AssertsJsonForModel;
 
 class HostTest extends TestCase
 {
+    use AssertsJsonForModel;
     use RefreshDatabase;
 
     private User $user;
@@ -122,19 +124,5 @@ class HostTest extends TestCase
 
         $this->episode = Episode::factory()->create();
         $this->user = User::factory()->create();
-    }
-
-    private function assertJsonIsHost(AssertableJson $json): AssertableJson
-    {
-        return $json
-            ->whereAllType([
-                'id' => 'integer',
-                'name' => 'string',
-                'description' => 'string',
-                'created_at' => 'string',
-                'updated_at' => 'string',
-            ])
-            ->missing('deleted_at')
-            ->etc();
     }
 }

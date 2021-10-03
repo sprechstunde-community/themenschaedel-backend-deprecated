@@ -9,9 +9,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Tests\Traits\AssertableJson\AssertsJsonForModel;
 
 class SubtopicTest extends TestCase
 {
+    use AssertsJsonForModel;
     use RefreshDatabase;
 
     private User $user;
@@ -150,20 +152,5 @@ class SubtopicTest extends TestCase
         $this->user = User::factory()->create();
         $this->episode = Episode::factory()->create([], $this->user);
         $this->topic = Topic::factory()->create([], $this->episode);
-    }
-
-    private function assertJsonIsSubtopic(AssertableJson $json): AssertableJson
-    {
-        return $json
-            ->whereAllType([
-                'id' => 'integer',
-                'user_id' => 'integer',
-                'topic_id' => 'integer',
-                'name' => 'string',
-                'created_at' => 'string',
-                'updated_at' => 'string',
-            ])
-            ->missing('deleted_at')
-            ->etc();
     }
 }

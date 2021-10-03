@@ -9,9 +9,11 @@ use Faker\Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Tests\Traits\AssertableJson\AssertsJsonForModel;
 
 class TopicTest extends TestCase
 {
+    use AssertsJsonForModel;
     use RefreshDatabase;
 
     private User $user;
@@ -150,24 +152,5 @@ class TopicTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->episode = Episode::factory()->create([], $this->user);
-    }
-
-    private function assertJsonIsTopic(AssertableJson $json): AssertableJson
-    {
-        return $json
-            ->whereAllType([
-                'id' => 'integer',
-                'episode_id' => 'integer',
-                'user_id' => 'integer',
-                'name' => 'string',
-                'start' => 'integer',
-                'end' => 'integer',
-                'ad' => 'boolean',
-                'community_contribution' => 'boolean',
-                'created_at' => 'string',
-                'updated_at' => 'string',
-            ])
-            ->missing('deleted_at')
-            ->etc();
     }
 }
