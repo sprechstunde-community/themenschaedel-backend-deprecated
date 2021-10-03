@@ -72,9 +72,11 @@ class FlagController extends AbstractApiController
     public function store(Episode $episode, Request $request): JsonResource
     {
         /** @var Flag $flag */
-        $flag = $episode->flags()->create();
+        $flag = $episode->flags()->newModelInstance();
         $flag->fill($request->all());
-        $flag->push();
+        $flag->episode()->associate($episode);
+        $flag->user()->associate($request->user());
+        $flag->save();
 
         return new JsonResource($flag->refresh()->loadMissing($this->relations));
     }

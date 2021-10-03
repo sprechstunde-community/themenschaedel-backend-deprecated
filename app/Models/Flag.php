@@ -21,6 +21,11 @@ class Flag extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'episode_id' => 'integer',
+        'user_id' => 'integer',
+    ];
+
     protected $fillable = [
         'reason',
     ];
