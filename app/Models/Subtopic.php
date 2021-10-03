@@ -21,6 +21,11 @@ class Subtopic extends Model
 {
     use HasFactory, Searchable;
 
+    protected $casts = [
+        'user_id' => 'integer',
+        'topic_id' => 'integer',
+    ];
+
     protected $fillable = [
         'name',
     ];

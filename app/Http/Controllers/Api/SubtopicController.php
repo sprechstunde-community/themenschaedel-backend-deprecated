@@ -36,7 +36,7 @@ class SubtopicController extends AbstractApiController
     public function index(Request $request): JsonResource
     {
         return JsonResource::collection(
-            Subtopic::with([$this->relations])->paginate($this->getPerPageParameter($request))
+            Subtopic::with($this->relations)->paginate($this->getPerPageParameter($request))
         );
     }
 

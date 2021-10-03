@@ -117,8 +117,8 @@ class EpisodePolicy
      */
     public function claim(User $user, Episode $episode)
     {
-        // can only be claimed, if no one else has claimed it yet
-        return is_null($episode->claimed);
+        // can only be claimed, if no one else has claimed it yet and the user has no other claims
+        return is_null($episode->claimed) && is_null($user->claim()->first());
     }
 
     /**

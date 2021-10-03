@@ -116,18 +116,11 @@ class EpisodeController extends AbstractApiController
      * @param Episode $episode
      * @param Request $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse
      * @throws AuthorizationException
      */
     public function claim(Episode $episode, Request $request)
     {
-        if ($episode->claimed) {
-            return new JsonResponse([
-                'code' => 409,
-                'reason' => 'ALREADY_CLAIMED',
-            ], 409);
-        }
-
         $this->authorize('claim', $episode);
 
         $claim = new Claim();
@@ -135,7 +128,7 @@ class EpisodeController extends AbstractApiController
         $claim->user()->associate($request->user());
         $episode->claimed()->save($claim);
 
-        return new JsonResource($claim->refresh()->loadMissing('user', 'episode'));
+        return new JsonResponse(null, 201);
     }
 
     /**
@@ -200,6 +193,8 @@ class EpisodeController extends AbstractApiController
 
         $vote->positive = $direction > 0;
         $vote->episode()->associate($episode);
+        $vote->user()->associate($request->user());
+        $vote->save();
 
         return new JsonResource(
             $vote

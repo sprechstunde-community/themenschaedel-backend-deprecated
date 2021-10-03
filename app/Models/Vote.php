@@ -21,6 +21,10 @@ class Vote extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'positive' => 'boolean',
+    ];
+
     protected $fillable = [
         'positive',
     ];
