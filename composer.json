@@ -21,6 +21,7 @@
         "laravel/sanctum": "^2.6",
         "laravel/scout": "^9.1",
         "laravel/tinker": "^2.5",
+        "league/flysystem": "^1.1.4",
         "livewire/livewire": "^2.0",
         "lukaswhite/podcast-feed-parser": "^0.0.7",
         "meilisearch/meilisearch-php": "^0.18.0",
