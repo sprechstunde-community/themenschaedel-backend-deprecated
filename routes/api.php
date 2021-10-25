@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SubtopicController;
 use App\Http\Controllers\Api\TopicController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('auth/logout', [AuthController::class, 'logout'])->name('user.logout');
     Route::delete('auth/logout/all', [AuthController::class, 'reset'])->name('user.logout.everywhere');
 });
+
+// user
+Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
 
 // search
 Route::get('search/episodes', [SearchController::class, 'episodes'])->name('search.episodes');

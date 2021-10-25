@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -52,7 +53,7 @@ class UserController extends AbstractApiController
      */
     public function show(User $user): JsonResource
     {
-        return new JsonResource($user->loadMissing(['claim', 'topics', 'subtopics']));
+        return new UserResource($user->loadMissing(['claim', 'topics', 'subtopics']));
     }
 
     /**
