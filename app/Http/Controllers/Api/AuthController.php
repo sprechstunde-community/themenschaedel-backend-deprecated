@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,5 +90,10 @@ class AuthController extends AbstractApiController
         return [
             'message' => 'You have successfully logged out and all tokens were successfully deleted',
         ];
+    }
+
+    public function me()
+    {
+        return new UserResource(auth()->user());
     }
 }

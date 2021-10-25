@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/register', [AuthController::class, 'register'])->name('user.register');
 Route::post('auth/login', [AuthController::class, 'login'])->name('user.login');
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('me', [AuthController::class, 'me'])->name('user.me');
     Route::delete('auth/logout', [AuthController::class, 'logout'])->name('user.logout');
     Route::delete('auth/logout/all', [AuthController::class, 'reset'])->name('user.logout.everywhere');
 });
