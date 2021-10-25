@@ -133,15 +133,16 @@ trait AssertsJsonForModel
     {
         return $json
             ->whereAllType([
-                'id' => 'integer',
                 'username' => 'string',
-                'description' => 'string',
+                'description' => 'string|null',
+                'profile_picture' => 'string|null',
                 'created_at' => 'string',
-                'updated_at' => 'string',
             ])
             ->missingAll([
+                'id',
                 'email',
                 'email_verified_at',
+                'updated_at',
                 'deleted_at',
             ])
             ->etc();
