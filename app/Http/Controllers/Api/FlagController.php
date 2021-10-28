@@ -16,18 +16,31 @@ class FlagController extends AbstractApiController
 {
     use AuthorizesRequests;
 
-    public function __construct()
-    {
-        $this->authorizeResource(Flag::class, 'flag');
-    }
-
     private array $relations = [
         'episode',
         'user',
     ];
 
+    public function __construct()
+    {
+        $this->authorizeResource(Flag::class, 'flag');
+    }
+
     /**
-     * Display a listing of the resource.
+     * List of flags
+     *
+     * @OA\Get(
+     *     path="/flags",
+     *     tags={"flags"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/FlagCollection")
+     *     ),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      *
@@ -42,7 +55,22 @@ class FlagController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource scoped by the parent resource.
+     * List of flags scoped by parent resource
+     *
+     * @OA\Get(
+     *     path="/episodes/{episode}/flags",
+     *     tags={"episodes", "flags"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="episode", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/FlagCollection")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Episode $episode
      * @param Request $request
@@ -64,6 +92,18 @@ class FlagController extends AbstractApiController
     /**
      * Store a newly created resource in storage.
      *
+     * @OA\Post(
+     *     path="/episodes/{episode}/flags",
+     *     tags={"flags"},
+     *     @OA\Parameter(name="episode", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/Flag")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     * )
+     *
      * @param Episode $episode
      * @param Request $request
      *
@@ -84,6 +124,19 @@ class FlagController extends AbstractApiController
     /**
      * Display the specified resource.
      *
+     * @OA\Get(
+     *     path="/flags/{flag}",
+     *     tags={"flags"},
+     *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/Flag")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
+     *
      * @param Flag $flag
      *
      * @return JsonResource
@@ -95,6 +148,19 @@ class FlagController extends AbstractApiController
 
     /**
      * Update the specified resource in storage.
+     *
+     * @OA\Put(
+     *     path="/flags/{flag}",
+     *     tags={"flags"},
+     *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/Flag")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      * @param Flag $flag
@@ -112,6 +178,18 @@ class FlagController extends AbstractApiController
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @OA\Delete(
+     *     path="/flags/{flag}",
+     *     tags={"flags"},
+     *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Flag $flag
      *

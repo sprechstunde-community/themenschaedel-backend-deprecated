@@ -7,15 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * A flag on an episode means, that the episode is not correctly maintained and should be redone.
+ * Flag
  *
- * @author Vincent Neubauer <v.neubauer@darlor.de>
- * @package App\Models
+ * A flag on an episode means, that the episode is not correctly maintained and should be re-done.
+ *
+ * @OA\Schema(
+ *     schema="Flag",
+ *     required={"episode_id", "user_id", "reason"},
+ *     @OA\Property(property="episode_id", type="integer", example=1),
+ *     @OA\Property(property="user_id", type="integer", example=1),
+ *     @OA\Property(property="reason", type="string", description="Summary why this episode should be updated."),
+ * )
+ *
+ * @OA\Schema(schema="FlagCollection", type="array", @OA\Items(ref="#/components/schemas/Flag"))
  *
  * @property Episode $episode The {@see Episode}, that got flagged.
  * @property User $user The {@see User}, that submitted the flag.
  *
  * @property string|null $reason The reason, why the {@see User} flagged the episode.
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
  */
 class Flag extends Model
 {

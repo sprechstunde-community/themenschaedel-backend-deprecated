@@ -34,7 +34,19 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource.
+     * Listing episodes
+     *
+     * @OA\Get(
+     *     path="/episodes",
+     *     tags={"episodes"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/EpisodeResourceCollection"))
+     *     )
+     * )
      *
      * @param Request $request
      *
@@ -54,7 +66,21 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created episode resource in storage.
+     *
+     * @OA\Post(
+     *     path="/episodes",
+     *     tags={"episodes"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/EpisodeResource")
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      *
@@ -70,7 +96,24 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Display the specified resource.
+     * Display episode resource
+     *
+     * @OA\Get(
+     *     path="/episodes/{episode}",
+     *     tags={"episodes"},
+     *     @OA\Parameter(
+     *         name="episode",
+     *         in="path",
+     *         required=true,
+     *         description="Internal episode ID",
+     *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/EpisodeResource")
+     *     ),
+     * )
      *
      * @param Episode $episode
      *
@@ -82,7 +125,21 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the episode resource in storage
+     *
+     * @OA\Put(
+     *     path="/episodes/{episode}",
+     *     tags={"episodes"},
+     *     @OA\Parameter(
+     *         name="episode",
+     *         in="path",
+     *         required=true,
+     *         description="Internal episode ID",
+     *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      * @param Episode $episode
@@ -94,11 +151,26 @@ class EpisodeController extends AbstractApiController
     {
         $episode->fill($request->all());
         $episode->saveOrFail();
+
         return new EpisodeResource($episode->refresh()->loadMissing($this->relations));
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @OA\Delete(
+     *     path="/episodes/{episode}",
+     *     tags={"episodes"},
+     *     @OA\Parameter(
+     *         name="episode",
+     *         in="path",
+     *         required=true,
+     *         description="Internal episode ID",
+     *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Episode $episode
      *
@@ -111,7 +183,22 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Claim a new episode.
+     * Claim a new episode
+     *
+     * @OA\Post(
+     *     path="/episodes/{episode}/claim",
+     *     tags={"claims", "episodes"},
+     *     @OA\Parameter(
+     *         name="episode",
+     *         in="path",
+     *         required=true,
+     *         description="Internal episode ID",
+     *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\Response(response="201", description="Success"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Already Claimed"),
+     * )
      *
      * @param Episode $episode
      * @param Request $request
@@ -132,7 +219,22 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the claim from episode resource
+     *
+     * @OA\Delete(
+     *     path="/episodes/{episode}/claim",
+     *     tags={"claims", "episodes"},
+     *     @OA\Parameter(
+     *         name="episode",
+     *         in="path",
+     *         required=true,
+     *         description="Internal episode ID",
+     *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\Response(response="201", description="Success"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Claimed by someone else"),
+     * )
      *
      * @param Episode $episode
      *
@@ -154,7 +256,34 @@ class EpisodeController extends AbstractApiController
     }
 
     /**
-     * Vote for an episode. Handles up votes, down votes and removal of votes.
+     * Vote for an episode
+     *
+     * Handles up votes, down votes and removal of votes.
+     *
+     * @OA\Post(
+     *     path="/episodes/{episode}/vote",
+     *     tags={"vote", "episodes"},
+     *     @OA\Parameter(
+     *         name="episode",
+     *         in="path",
+     *         required=true,
+     *         description="Internal episode ID",
+     *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\Parameter(
+     *         name="direction",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             enum={-1, 0, 1},
+     *             example=1,
+     *         ),
+     *     ),
+     *     @OA\Response(response="201", description="Success"),
+     *     @OA\Response(response="400", description="Bad Request"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     * )
      *
      * @param Episode $episode
      * @param Request $request
@@ -203,6 +332,5 @@ class EpisodeController extends AbstractApiController
                     'episode',
                 ])
         );
-
     }
 }

@@ -37,7 +37,19 @@ class HostController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource.
+     * List of hosts.
+     *
+     * @OA\Get(
+     *     path="/hosts",
+     *     tags={"hosts"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/HostCollection")
+     *     ),
+     * )
      *
      * @param Request $request
      *
@@ -52,7 +64,20 @@ class HostController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource.
+     * List of hosts scoped by an episode
+     *
+     * @OA\Get(
+     *     path="/episodes/{episode}/hosts",
+     *     tags={"episodes", "hosts"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="episode", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/HostCollection")
+     *     ),
+     * )
      *
      * @param Episode $episode
      * @param Request $request

@@ -13,11 +13,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 
 /**
- * An episode of the podcast.
- *
- * @author Vincent Neubauer <v.neubauer@darlor.de>
- * @package App\Models
- *
  * @property string guid
  * @property int episode_number
  * @property string title
@@ -36,6 +31,8 @@ use Laravel\Scout\Searchable;
  * @property Collection|Topic[] $topics All topics discussed in this episode.
  * @property Collection|Subtopic[] $subtopics All subtopics attached to this episode.
  * @property Collection|Vote[] $votes All votes attached to this episode.
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
  */
 class Episode extends Model
 {

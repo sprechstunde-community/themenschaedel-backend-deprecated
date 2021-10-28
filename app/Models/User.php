@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -14,11 +12,6 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Class User
- *
- * @author Vincent Neubauer <v.neubauer@darlor.de>
- * @package App\Models
- *
  * @property string $username
  * @property string $email
  * @property string|null $name
@@ -29,6 +22,14 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * @property Collection|Topic[] $topics All {@see Topic}s, that this user has submitted
  * @property Collection|Subtopic[] $subtopics All {@see Subtopic}s, that this user has submitted
+ *
+ * @OA\Schema(required={"username"}, {
+ *     @OA\Property(property="username", type="string"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="description", type="string"),
+ * })
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
  */
 class User extends Authenticatable
 {

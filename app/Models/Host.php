@@ -8,10 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
+ * Host
+ *
  * A host is a person talking on an podcast episode.
  *
- * @author Vincent Neubauer <v.neubauer@darlor.de>
- * @package App\Models
+ * @OA\Schema(
+ *     schema="Host",
+ *     required={"name"},
+ *     @OA\Property(property="name", type="string", example="John Doe"),
+ *     @OA\Property(property="description", type="string"),
+ *     @OA\Property(property="main", type="boolean"),
+ * )
+ *
+ * @OA\Schema(schema="HostCollection", type="array", @OA\Items(ref="#/components/schemas/Host"))
  *
  * @property string $name Name of the host
  * @property string|null $description A short description about the host
@@ -20,6 +29,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *     {@see Episode}.
  *
  * @property Collection|Episode[] $episodes List of all {@see Episode}s, that this host was present on
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
  */
 class Host extends Model
 {

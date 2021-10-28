@@ -5,6 +5,17 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * UserResource
+ *
+ * @OA\Schema(allOf={
+ *     @OA\Schema(ref="#/components/schemas/User"),
+ *     @OA\Schema(
+ *         @OA\Property(property="profile_picture", type="string", format="url", readOnly=true),
+ *     ),
+ * })
+ *
+ * @author Vincent Neubauer <v.neubauer@vonmaehlen.com> */
 class UserResource extends JsonResource
 {
     private const PP_SIZE = 256;

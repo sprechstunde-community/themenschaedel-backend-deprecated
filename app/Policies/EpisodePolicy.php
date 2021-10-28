@@ -122,12 +122,12 @@ class EpisodePolicy
     }
 
     /**
-     * Determine whether the user can claim the model.
+     * Determine whether the user can remove the claim from the model.
      *
      * @param User $user
      * @param Episode $episode
      *
-     * @return mixed
+     * @return bool
      */
     public function unclaim(User $user, Episode $episode)
     {
