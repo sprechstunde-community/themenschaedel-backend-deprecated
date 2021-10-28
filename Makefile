@@ -27,3 +27,7 @@ logs: ## Display latest and any following log entries
 
 test: ## Run unit tests
 	php artisan test
+
+docs: ## Build docs
+	@mkdir -p public/docs
+	@vendor/bin/openapi config/openapi.php app | tee public/docs/openapi.yml
