@@ -63,7 +63,7 @@ RUN composer install --no-dev --no-interaction --no-progress --no-cache --verbos
 # Generate current documentation
 ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
-RUN make docs &>/dev/null
+RUN mkdir -p storage/api-docs && make docs | head -n 4
 
 EXPOSE 8080
 ENTRYPOINT ["start", "webserver"]
