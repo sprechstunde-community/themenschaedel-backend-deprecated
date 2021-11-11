@@ -17,11 +17,15 @@ stop: ## Stop development environment
 purge: ## Purge development environment and all data
 	$(CONTAINERS) down -v
 
-shell: ## Start a shell session inside the shopware container
+shell: ## Start a shell session inside the container
 	$(LARAVEL) bash
 
-cache: ## Clear shopware cache
+cache: ## Clear and rebuild all caches
 	$(LARAVEL) php artisan cache:clear
+	$(LARAVEL) php artisan cache:clear
+	$(LARAVEL) php artisan config:cache
+	$(LARAVEL) php artisan view:cache
+	$(LARAVEL) php artisan route:cache
 
 logs: ## Display latest and any following log entries
 	$(LARAVEL) tail -f -n $${N:=250} storage/logs/laravel.log
@@ -30,6 +34,7 @@ test: ## Run unit tests
 	php artisan test
 
 docs: ## Build docs
+	@mkdir -p storage/api-docs
 	@vendor/bin/openapi config/openapi.php app \
 		| sed "s/SNAPSHOT/$(APP_VERSION)/g" \
 		| tee storage/api-docs/openapi.yaml
