@@ -60,5 +60,10 @@ USER www
 # Install php dependencies
 RUN composer install --no-dev --no-interaction --no-progress --no-cache --verbose
 
+# Generate current documentation
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
+RUN make docs &>/dev/null
+
 EXPOSE 8080
 ENTRYPOINT ["start", "webserver"]

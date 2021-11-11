@@ -1,5 +1,6 @@
 CONTAINERS=docker-compose
 LARAVEL=$(CONTAINERS) exec app
+APP_VERSION ?= $(shell git describe --always --abbrev=0)
 
 help: ## Print this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -29,5 +30,11 @@ test: ## Run unit tests
 	php artisan test
 
 docs: ## Build docs
-	@mkdir -p public/docs
-	@vendor/bin/openapi config/openapi.php app | tee public/docs/openapi.yml
+	@vendor/bin/openapi config/openapi.php app \
+		| sed "s/SNAPSHOT/$(APP_VERSION)/g" \
+		| tee storage/api-docs/openapi.yaml
+
+image: # Build docker image
+	@echo "Build image for version: $(APP_VERSION)"
+	docker build -f docker/Dockerfile -t sprechstunde-community/themenschadel-backend:nightly \
+	--build-arg=APP_VERSION="$(APP_VERSION)" .
