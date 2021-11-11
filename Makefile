@@ -36,5 +36,5 @@ docs: ## Build docs
 
 image: # Build docker image
 	@echo "Build image for version: $(APP_VERSION)"
-	docker build -f docker/Dockerfile -t sprechstunde-community/themenschadel-backend:nightly \
+	docker build -f docker/Dockerfile -t sprechstunde-community/themenschaedel-backend:nightly \
 	--build-arg=APP_VERSION="$(APP_VERSION)" .
