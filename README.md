@@ -38,6 +38,16 @@ Following http headers are required on each request:
 - `Accept: application/json`
 - `Content-Type: application/json`
 
+API Documentation
+-------------
+
+The API is documented through the OpenAPI specification throughout the code base and can be viewed interactively.  
+Running the following command and browse the application at `/_docs` to view the interactive API documentation.
+
+```bash
+make docs
+```
+
 Authentication
 --------------
 
