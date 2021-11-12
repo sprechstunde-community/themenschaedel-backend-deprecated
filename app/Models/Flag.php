@@ -14,9 +14,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @OA\Schema(
  *     schema="Flag",
  *     required={"episode_id", "user_id", "reason"},
- *     @OA\Property(property="episode_id", type="integer", example=1),
- *     @OA\Property(property="user_id", type="integer", example=1),
- *     @OA\Property(property="reason", type="string", description="Summary why this episode should be updated."),
+ *     @OA\Property(property="episode_id", type="integer", example=1, readOnly=true),
+ *     @OA\Property(property="user_id", type="integer", example=1, readOnly=true),
+ *     @OA\Property(property="reason", type="string", example="Lorem ipsum dolor sit amet...",
+ *         description="Summary why this episode should be updated."),
  * )
  *
  * @OA\Schema(schema="FlagCollection", type="array", @OA\Items(ref="#/components/schemas/Flag"))

@@ -21,6 +21,10 @@ class FlagController extends AbstractApiController
         'user',
     ];
 
+    /**
+     * @OA\Schema(schema="FlagResponse", @OA\Property(property="data", ref="#/components/schemas/Flag"))
+     * @OA\Schema(schema="FlagsResponse", @OA\Property(property="data", ref="#/components/schemas/FlagCollection"))
+     */
     public function __construct()
     {
         $this->authorizeResource(Flag::class, 'flag');
@@ -64,7 +68,7 @@ class FlagController extends AbstractApiController
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/FlagCollection")
+     *         @OA\JsonContent(ref="#/components/schemas/FlagsResponse")
      *     ),
      *     @OA\Response(response="401", description="Unauthorized"),
      *     @OA\Response(response="403", description="Forbidden"),
@@ -95,10 +99,17 @@ class FlagController extends AbstractApiController
      *     tags={"flags"},
      *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="episode", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Flag"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/Flag")
+     *         @OA\JsonContent(ref="#/components/schemas/FlagResponse")
      *     ),
      *     @OA\Response(response="401", description="Unauthorized"),
      * )
@@ -131,7 +142,7 @@ class FlagController extends AbstractApiController
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/Flag")
+     *         @OA\JsonContent(ref="#/components/schemas/FlagResponse")
      *     ),
      *     @OA\Response(response="401", description="Unauthorized"),
      *     @OA\Response(response="403", description="Forbidden"),
@@ -143,6 +154,7 @@ class FlagController extends AbstractApiController
      */
     public function show(Flag $flag): JsonResource
     {
+        // TODO fix 403 if current user matches creator of the flag
         return new JsonResource($flag->loadMissing($this->relations));
     }
 
@@ -154,10 +166,17 @@ class FlagController extends AbstractApiController
      *     tags={"flags"},
      *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Flag"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/Flag")
+     *         @OA\JsonContent(ref="#/components/schemas/FlagResponse")
      *     ),
      *     @OA\Response(response="401", description="Unauthorized"),
      *     @OA\Response(response="403", description="Forbidden"),
@@ -191,6 +210,7 @@ class FlagController extends AbstractApiController
      *     ),
      *     @OA\Response(response="401", description="Unauthorized"),
      *     @OA\Response(response="403", description="Forbidden"),
+     *     @OA\Response(response="404", description="Not Found"),
      * )
      *
      * @param Flag $flag
@@ -200,6 +220,7 @@ class FlagController extends AbstractApiController
      */
     public function destroy(Flag $flag): JsonResponse
     {
+        // TODO fix 404 if model missing
         return new JsonResponse(null, $flag->delete() ? 200 : 500);
     }
 }

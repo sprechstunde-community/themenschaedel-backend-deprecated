@@ -40,6 +40,10 @@ class Episode extends Model
 
     protected $perPage = 25;
 
+    protected $casts = [
+        'explicit' => 'bool',
+    ];
+
     protected $fillable = [
         'guid',
         'episode_number',

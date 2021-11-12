@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Throwable;
 
 class EpisodeController extends AbstractApiController
@@ -27,6 +28,10 @@ class EpisodeController extends AbstractApiController
 
     /**
      * EpisodeController constructor.
+     *
+     * @OA\Schema(schema="EpisodeResponse", @OA\Property(property="data", ref="#/components/schemas/EpisodeResource"))
+     * @OA\Schema(schema="EpisodesResponse", @OA\Property(property="data",
+     *     ref="#/components/schemas/EpisodeResourceCollection"))
      */
     public function __construct()
     {
@@ -44,7 +49,7 @@ class EpisodeController extends AbstractApiController
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/EpisodeResourceCollection"))
+     *         @OA\JsonContent(ref="#/components/schemas/EpisodesResponse"))
      *     )
      * )
      *
@@ -112,7 +117,7 @@ class EpisodeController extends AbstractApiController
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/EpisodeResource")
+     *         @OA\JsonContent(ref="#/components/schemas/EpisodeResponse")
      *     ),
      * )
      *
@@ -138,6 +143,13 @@ class EpisodeController extends AbstractApiController
      *         required=true,
      *         description="Internal episode ID",
      *         @OA\Schema(type="integer", example=13)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/EpisodeResource"),
+     *         )
      *     ),
      *     @OA\Response(response="401", description="Unauthenticated"),
      *     @OA\Response(response="403", description="Forbidden"),
@@ -236,25 +248,22 @@ class EpisodeController extends AbstractApiController
      *         description="Internal episode ID",
      *         @OA\Schema(type="integer", example=13)
      *     ),
-     *     @OA\Response(response="201", description="Success"),
+     *     @OA\Response(response="200", description="Success"),
      *     @OA\Response(response="401", description="Unauthenticated"),
      *     @OA\Response(response="403", description="Claimed by someone else"),
      * )
      *
      * @param Episode $episode
      *
-     * @return JsonResponse
+     * @return JsonResponse|Response
      * @throws AuthorizationException
      */
-    public function unclaim(Episode $episode): JsonResponse
+    public function unclaim(Episode $episode)
     {
         $this->authorize('unclaim', $episode);
 
         if (!$episode->claimed instanceof Claim) {
-            return new JsonResponse([
-                'code' => 409,
-                'reason' => 'NOT_YET_CLAIMED',
-            ], 409);
+            return new Response(null, 200);
         }
 
         return new JsonResponse(null, $episode->claimed()->delete() ? 200 : 500);
@@ -286,7 +295,8 @@ class EpisodeController extends AbstractApiController
      *             example=1,
      *         ),
      *     ),
-     *     @OA\Response(response="201", description="Success"),
+     *     @OA\Response(response="200", description="Success - removed vote"),
+     *     @OA\Response(response="201", description="Success - added vote"),
      *     @OA\Response(response="400", description="Bad Request"),
      *     @OA\Response(response="401", description="Unauthenticated"),
      * )
@@ -294,7 +304,7 @@ class EpisodeController extends AbstractApiController
      * @param Episode $episode
      * @param Request $request
      *
-     * @return JsonResponse|JsonResource
+     * @return JsonResponse|Response
      * @throws Exception
      */
     public function vote(Episode $episode, Request $request)
@@ -308,7 +318,7 @@ class EpisodeController extends AbstractApiController
             ], 400);
         }
 
-        $direction = (int) $request->input('direction');
+        $direction = (int)$request->input('direction');
         $vote = $episode->votes()->where('user_id', $request->user()->getKey())->first();
 
         if ($direction === 0) {
@@ -319,7 +329,7 @@ class EpisodeController extends AbstractApiController
                 $success = true;
             }
 
-            return new JsonResponse(null, $success ? 200 : 500);
+            return new Response(null, $success ? 200 : 500);
         }
 
         if (!$vote instanceof Vote) {
@@ -331,12 +341,6 @@ class EpisodeController extends AbstractApiController
         $vote->user()->associate($request->user());
         $vote->save();
 
-        return new JsonResource(
-            $vote
-                ->refresh()
-                ->loadMissing([
-                    'episode',
-                ])
-        );
+        return new Response(null, 201);
     }
 }
