@@ -6,6 +6,7 @@ use App\Models\Host;
 use App\Models\Subtopic;
 use App\Models\Topic;
 use App\Policies\BasicPolicy;
+use App\Policies\HostPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,7 +21,7 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
 
         // enable basic community policies on how to manage these models
-        Host::class => BasicPolicy::class,
+        Host::class => HostPolicy::class,
         Subtopic::class => BasicPolicy::class,
         Topic::class => BasicPolicy::class,
     ];

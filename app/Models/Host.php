@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Host
  *
- * A host is a person talking on an podcast episode.
+ * A host is a person talking on a podcast episode.
  *
  * @OA\Schema(
  *     schema="Host",
  *     required={"name"},
+ *     @OA\Property(property="id", type="integer", example="13", readOnly="true"),
  *     @OA\Property(property="name", type="string", example="John Doe"),
- *     @OA\Property(property="description", type="string"),
+ *     @OA\Property(property="description", type="string", example="Lorem ipsum dolor sit amet..."),
  *     @OA\Property(property="main", type="boolean"),
  * )
  *
@@ -35,6 +36,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Host extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'main' => 'bool',
+    ];
 
     protected $fillable = [
         'name',

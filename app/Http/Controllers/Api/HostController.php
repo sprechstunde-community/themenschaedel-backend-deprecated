@@ -23,7 +23,10 @@ class HostController extends AbstractApiController
     private LoggerInterface $logger;
 
     /**
-     * HostController constructor.
+     * HostController constructor
+     *
+     * @OA\Schema(schema="HostResponse", @OA\Property (property="data", ref="#/components/schemas/Host"))
+     * @OA\Schema(schema="HostsResponse", @OA\Property (property="data", ref="#/components/schemas/HostCollection"))
      *
      * @param ConnectionInterface $connection
      * @param LoggerInterface $logger
@@ -47,7 +50,7 @@ class HostController extends AbstractApiController
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/HostCollection")
+     *         @OA\JsonContent(ref="#/components/schemas/HostsResponse")
      *     ),
      * )
      *
@@ -75,7 +78,7 @@ class HostController extends AbstractApiController
      *     @OA\Response(
      *         response="200",
      *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/HostCollection")
+     *         @OA\JsonContent(ref="#/components/schemas/HostsResponse")
      *     ),
      * )
      *
@@ -97,7 +100,28 @@ class HostController extends AbstractApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     *
+     * Store new host resource
+     *
+     * @OA\Post(
+     *     path="/hosts",
+     *     tags={"hosts"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Host")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/HostResponse"),
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      *
@@ -114,7 +138,18 @@ class HostController extends AbstractApiController
     }
 
     /**
-     * Display the specified resource.
+     * Display the host resource
+     *
+     * @OA\Get(
+     *     path="/hosts/{host}",
+     *     tags={"hosts"},
+     *     @OA\Parameter(name="host", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/HostResponse"),
+     *     ),
+     * )
      *
      * @param Host $host
      *
@@ -126,7 +161,28 @@ class HostController extends AbstractApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the host resource
+     *
+     * @OA\Put(
+     *     path="/hosts/{host}",
+     *     tags={"hosts"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="host", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Host")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/HostResponse"),
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      * @param Host $host
@@ -143,7 +199,17 @@ class HostController extends AbstractApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the host resource
+     *
+     * @OA\Delete(
+     *     path="/hosts/{host}",
+     *     tags={"hosts"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="host", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Host $host
      *
@@ -152,11 +218,25 @@ class HostController extends AbstractApiController
      */
     public function destroy(Host $host): JsonResponse
     {
+        // TODO fix deleting if model has relations
         return new JsonResponse(null, $host->delete() ? 200 : 500);
     }
 
     /**
      * Assign an episode onto the host
+     *
+     * @OA\Post(
+     *     path="/hosts/{host}/episodes/{episode}",
+     *     tags={"episodes", "hosts"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="episode", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\Parameter(name="host", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\Response(response="200", description="Already assigned"),
+     *     @OA\Response(response="201", description="Created assignment"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
+     *
      *
      * @param Host $host
      * @param Episode $episode
@@ -179,7 +259,7 @@ class HostController extends AbstractApiController
 
         try {
             $host->episodes()->attach($episode->getKey());
-            return new Response(null); // return status 200 to indicate success
+            return new Response(null, 201); // return status 200 to indicate success
         } catch (Throwable $exception) {
             // Log as much useful information as possible
             $this->logger->error('Failed to populate host-episode-relationship', [
@@ -199,6 +279,17 @@ class HostController extends AbstractApiController
 
     /**
      * Detach an episode onto the host
+     *
+     * @OA\Delete(
+     *     path="/hosts/{host}/episodes/{episode}",
+     *     tags={"episodes", "hosts"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="episode", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\Parameter(name="host", in="path", @OA\Schema(type="integer", example=1)),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Host $host
      * @param Episode $episode
