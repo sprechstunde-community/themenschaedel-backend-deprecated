@@ -71,6 +71,7 @@ class EpisodeController extends AbstractApiController
      * @OA\Post(
      *     path="/episodes",
      *     tags={"episodes"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
@@ -130,6 +131,7 @@ class EpisodeController extends AbstractApiController
      * @OA\Put(
      *     path="/episodes/{episode}",
      *     tags={"episodes"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(
      *         name="episode",
      *         in="path",
@@ -161,6 +163,7 @@ class EpisodeController extends AbstractApiController
      * @OA\Delete(
      *     path="/episodes/{episode}",
      *     tags={"episodes"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(
      *         name="episode",
      *         in="path",
@@ -188,6 +191,7 @@ class EpisodeController extends AbstractApiController
      * @OA\Post(
      *     path="/episodes/{episode}/claim",
      *     tags={"claims", "episodes"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(
      *         name="episode",
      *         in="path",
@@ -224,6 +228,7 @@ class EpisodeController extends AbstractApiController
      * @OA\Delete(
      *     path="/episodes/{episode}/claim",
      *     tags={"claims", "episodes"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(
      *         name="episode",
      *         in="path",
@@ -263,6 +268,7 @@ class EpisodeController extends AbstractApiController
      * @OA\Post(
      *     path="/episodes/{episode}/vote",
      *     tags={"vote", "episodes"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(
      *         name="episode",
      *         in="path",

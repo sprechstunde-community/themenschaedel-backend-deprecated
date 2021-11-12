@@ -32,13 +32,10 @@ class FlagController extends AbstractApiController
      * @OA\Get(
      *     path="/flags",
      *     tags={"flags"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
      *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Success",
-     *         @OA\JsonContent(ref="#/components/schemas/FlagCollection")
-     *     ),
+     *     @OA\Response(response="401", description="Unauthorized"),
      *     @OA\Response(response="403", description="Forbidden"),
      * )
      *
@@ -60,6 +57,7 @@ class FlagController extends AbstractApiController
      * @OA\Get(
      *     path="/episodes/{episode}/flags",
      *     tags={"episodes", "flags"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
      *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Parameter(name="episode", in="path", required=true, @OA\Schema(type="integer", example=13)),
@@ -95,6 +93,7 @@ class FlagController extends AbstractApiController
      * @OA\Post(
      *     path="/episodes/{episode}/flags",
      *     tags={"flags"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="episode", in="path", required=true, @OA\Schema(type="integer", example=13)),
      *     @OA\Response(
      *         response="200",
@@ -127,6 +126,7 @@ class FlagController extends AbstractApiController
      * @OA\Get(
      *     path="/flags/{flag}",
      *     tags={"flags"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
      *     @OA\Response(
      *         response="200",
@@ -152,6 +152,7 @@ class FlagController extends AbstractApiController
      * @OA\Put(
      *     path="/flags/{flag}",
      *     tags={"flags"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
      *     @OA\Response(
      *         response="200",
@@ -182,6 +183,7 @@ class FlagController extends AbstractApiController
      * @OA\Delete(
      *     path="/flags/{flag}",
      *     tags={"flags"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Parameter(name="flag", in="path", required=true, @OA\Schema(type="integer", example=13)),
      *     @OA\Response(
      *         response="200",

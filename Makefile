@@ -35,9 +35,7 @@ test: ## Run unit tests
 
 docs: ## Build docs
 	@mkdir -p storage/api-docs
-	@vendor/bin/openapi config/openapi.php app \
-		| sed "s/SNAPSHOT/$(APP_VERSION)/g" \
-		| tee storage/api-docs/openapi.yaml
+	@vendor/bin/openapi config/openapi.php app | sed "s/SNAPSHOT/$(APP_VERSION)/g" > storage/api-docs/openapi.yaml
 
 image: # Build docker image
 	@echo "Build image for version: $(APP_VERSION)"

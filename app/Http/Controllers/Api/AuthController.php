@@ -140,6 +140,7 @@ class AuthController extends AbstractApiController
      * @OA\Delete(
      *     path="/auth/logout",
      *     tags={"auth"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Response(response="200", description="Success"),
      *     @OA\Response(response="401", description="Unauthenticated"),
      * )
@@ -170,6 +171,7 @@ class AuthController extends AbstractApiController
      * @OA\Delete(
      *     path="/auth/logout/all",
      *     tags={"auth"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Response(response="200", description="Success"),
      *     @OA\Response(response="401", description="Unauthenticated"),
      * )
@@ -195,6 +197,7 @@ class AuthController extends AbstractApiController
      * @OA\Get(
      *     path="/me",
      *     tags={"auth", "users"},
+     *     security={{ "bearerAuth":{} }},
      *     @OA\Response(
      *          response="200",
      *          description="Success",
