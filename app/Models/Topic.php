@@ -12,8 +12,18 @@ use Laravel\Scout\Searchable;
 /**
  * A single topic discussed in an episode.
  *
- * @author Vincent Neubauer <v.neubauer@darlor.de>
- * @package App\Models
+ * @OA\Schema(
+ *     schema="Topic",
+ *     required={"name"},
+ *     @OA\Property(property="id", readOnly=true, type="int", example=13),
+ *     @OA\Property(property="name", type="string", example="Lorem Ipsum"),
+ *     @OA\Property(property="start", type="int", example=0),
+ *     @OA\Property(property="end", type="int", example=780),
+ *     @OA\Property(property="ad", type="bool", example=false, description="Topic is an ad / sponsor segment"),
+ *     @OA\Property(property="community_contribution", type="bool", example=true),
+ * )
+ *
+ * @OA\Schema(schema="TopicCollection", type="array", @OA\Items(ref="#/components/schemas/Topic"))
  *
  * @property string $name Name of the topic
  * @property int $start Amount of seconds into the {@see Episode}, where this topic gets discussed
@@ -23,8 +33,10 @@ use Laravel\Scout\Searchable;
  *     came up with it.
  *
  * @property Episode $episode The {@see Episode}, in which this topic gets discussed
- * @property Collection|Subtopic[] $subtopics All {@see Subtopic}s that too get discussed in this section
+ * @property Collection|Subtopic[] $subtopics All {@see Subtopic}s that get discussed in this section too
  * @property User $user The {@see User}, that has submitted this topic
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
  */
 class Topic extends Model
 {

@@ -21,6 +21,10 @@ class TopicController extends AbstractApiController
         'user',
     ];
 
+    /**
+     * @OA\Schema(schema="TopicResponse", @OA\Property (property="data", ref="#/components/schemas/Topic"))
+     * @OA\Schema(schema="TopicsResponse", @OA\Property (property="data", ref="#/components/schemas/TopicCollection"))
+     */
     public function __construct()
     {
         $this->authorizeResource(Topic::class, 'topic');
