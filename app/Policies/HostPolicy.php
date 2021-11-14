@@ -59,7 +59,7 @@ class HostPolicy
     public function update(User $user, Host $host)
     {
         // TODO restrict to users with moderator role
-        return true;
+        return false;
     }
 
     /**

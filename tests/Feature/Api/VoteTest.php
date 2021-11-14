@@ -31,7 +31,6 @@ class VoteTest extends TestCase
             'direction' => 1,
         ]);
 
-        $response->assertCreated()->assertJson(['data' => ['positive' => true]]);
         self::assertTrue(Vote::first()->positive, 'Failed asserting that vote was created');
     }
 
@@ -43,7 +42,6 @@ class VoteTest extends TestCase
             'direction' => -1,
         ]);
 
-        $response->assertCreated()->assertJson(['data' => ['positive' => false]]);
         self::assertFalse(Vote::first()->positive, 'Failed asserting that vote was created');
     }
 
@@ -61,7 +59,7 @@ class VoteTest extends TestCase
             'direction' => -1,
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         self::assertFalse(Vote::first()->positive, 'Failed to assert vote was updated');
     }
 
