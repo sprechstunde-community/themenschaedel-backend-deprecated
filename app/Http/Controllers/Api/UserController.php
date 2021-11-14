@@ -44,7 +44,15 @@ class UserController extends AbstractApiController
     }
 
     /**
-     * Display the specified resource.
+     * Display the user
+     *
+     * @OA\Get(
+     *     path="/users/{username}",
+     *     tags={"users"},
+     *     @OA\Parameter(name="username", in="path", @OA\Schema(type="string", example="john.doe")),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Not Found"),
+     * )
      *
      * @param User $user
      *

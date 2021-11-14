@@ -10,12 +10,22 @@ use Laravel\Scout\Searchable;
 /**
  * A more granular defined sub-topic of the episode.
  *
- * @author Vincent Neubauer <v.neubauer@darlor.de>
- * @package App\Models
+ * @OA\Schema(
+ *     schema="Subtopic",
+ *     required={"name"},
+ *     @OA\Property(property="id", type="integer", readOnly=true),
+ *     @OA\Property(property="user_id", type="integer", readOnly=true),
+ *     @OA\Property(property="topic_id", type="integer", description="Assigned topic"),
+ *     @OA\Property(property="name", type="string", description="Caption of the subtopic"),
+ * )
+ *
+ * @OA\Schema(schema="SubtopicCollection", type="array", @OA\Items(ref="#/components/schemas/Subtopic"))
  *
  * @property string $name The name of the subtopic
  * @property Topic $topic The {@see Topic}, that this is a part of
  * @property User $user The {@see User}, that has submitted this subtopic
+ *
+ * @author Vincent Neubauer <v.neubauer@darlor.de>
  */
 class Subtopic extends Model
 {

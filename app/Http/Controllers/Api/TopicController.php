@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Throwable;
 
 class TopicController extends AbstractApiController
@@ -31,7 +32,19 @@ class TopicController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource.
+     * List of topics
+     *
+     * @OA\Get(
+     *     path="/topics",
+     *     tags={"topics"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/TopicsResponse")
+     *     ),
+     * )
      *
      * @param Request $request
      *
@@ -46,7 +59,20 @@ class TopicController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource scoped by parent model.
+     * List of topics scoped by episode
+     *
+     * @OA\Get(
+     *     path="/episodes/{episode}/topics",
+     *     tags={"episodes", "topics"},
+     *     @OA\Parameter(name="episode", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/TopicsResponse")
+     *     ),
+     * )
      *
      * @param Episode $episode
      * @param Request $request
@@ -67,7 +93,28 @@ class TopicController extends AbstractApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a new topic
+     *
+     * @OA\Post(
+     *     path="/episodes/{episode}/topics",
+     *     tags={"topics"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="episode", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Topic")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/TopicResponse")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Episode $episode
      * @param Request $request
@@ -86,7 +133,19 @@ class TopicController extends AbstractApiController
     }
 
     /**
-     * Display the specified resource.
+     * Display the topic
+     *
+     * @OA\Get(
+     *     path="/topics/{topic}",
+     *     tags={"topics"},
+     *     @OA\Parameter(name="topic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Success",
+     *         @OA\JsonContent(ref="#/components/schemas/TopicResponse")
+     *     ),
+     * )
+     *
      *
      * @param Topic $topic
      *
@@ -98,7 +157,24 @@ class TopicController extends AbstractApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the topic
+     *
+     * @OA\Put(
+     *     path="/topics/{topic}",
+     *     tags={"topics"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="topic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Topic")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success", @OA\Schema(ref="#/components/schemas/Topic")),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      * @param Topic $topic
@@ -115,15 +191,27 @@ class TopicController extends AbstractApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the topic
+     *
+     * @OA\Delete(
+     *     path="/topics/{topic}",
+     *     tags={"topics"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="topic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     *     @OA\Response(response="404", description="Not Found"),
+     * )
      *
      * @param Topic $topic
      *
-     * @return JsonResponse
+     * @return Response
      * @throws Exception
      */
-    public function destroy(Topic $topic): JsonResponse
+    public function destroy(Topic $topic): Response
     {
-        return new JsonResponse($topic->delete());
+        return new Response(null, $topic->delete() ? 200 : 500);
+
     }
 }

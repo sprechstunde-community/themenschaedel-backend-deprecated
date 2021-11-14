@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Throwable;
 
 class SubtopicController extends AbstractApiController
@@ -21,13 +22,28 @@ class SubtopicController extends AbstractApiController
         'user',
     ];
 
+    /**
+     * @OA\Schema(schema="SubtopicResponse", @OA\Property(property="data", ref="#/components/schemas/Subtopic"))
+     * @OA\Schema(schema="SubtopicsResponse",
+     *     @OA\Property(property="data", ref="#/components/schemas/SubtopicCollection"))
+     */
     public function __construct()
     {
         $this->authorizeResource(Subtopic::class, 'subtopic');
     }
 
     /**
-     * Display a listing of the resource.
+     * List of subtopics
+     *
+     * @OA\Get(
+     *     path="/subtopics",
+     *     tags={"subtopics"},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/SubtopicsResponse")
+     *     ),
+     * )
      *
      * @param Request $request
      *
@@ -41,7 +57,18 @@ class SubtopicController extends AbstractApiController
     }
 
     /**
-     * Display a listing of the resource scoped by the parent resource.
+     * List of subtopics scoped by topic
+     *
+     * @OA\Get(
+     *     path="/topics/{topic}/subtopics",
+     *     tags={"topics", "subtopics"},
+     *     @OA\Parameter(name="topic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/SubtopicsResponse")
+     *     ),
+     * )
      *
      * @param Topic $topic
      * @param Request $request
@@ -61,7 +88,26 @@ class SubtopicController extends AbstractApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a new subtopic
+     *
+     * @OA\Post(
+     *     path="/topics/{topic}/subtopics",
+     *     tags={"subtopics"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="topic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Subtopic")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/SubtopicResponse")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Topic $topic
      * @param Request $request
@@ -79,7 +125,16 @@ class SubtopicController extends AbstractApiController
     }
 
     /**
-     * Display the specified resource.
+     * Display the subtopic
+     *
+     * @OA\Get(
+     *     path="/subtopics/{subtopic}",
+     *     tags={"subtopics"},
+     *     @OA\Parameter(name="subtopic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(response="200", description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/SubtopicResponse")
+     *     ),
+     * )
      *
      * @param Subtopic $subtopic
      *
@@ -91,7 +146,26 @@ class SubtopicController extends AbstractApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the subtopic
+     *
+     * @OA\Put(
+     *     path="/subtopics/{subtopic}",
+     *     tags={"subtopics"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="subtopic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Subtopic")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/SubtopicResponse")
+     *     ),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     * )
      *
      * @param Request $request
      * @param Subtopic $subtopic
@@ -108,15 +182,26 @@ class SubtopicController extends AbstractApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the subtopic
+     *
+     * @OA\Delete(
+     *     path="/subtopics/{subtopic}",
+     *     tags={"subtopics"},
+     *     security={{ "bearerAuth":{} }},
+     *     @OA\Parameter(name="subtopic", in="path", @OA\Schema(type="integer", example=13)),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="401", description="Unauthenticated"),
+     *     @OA\Response(response="403", description="Forbidden"),
+     *     @OA\Response(response="404", description="Not Found"),
+     * )
      *
      * @param Subtopic $subtopic
      *
-     * @return JsonResponse
+     * @return Response
      * @throws Exception
      */
-    public function destroy(Subtopic $subtopic): JsonResponse
+    public function destroy(Subtopic $subtopic): Response
     {
-        return new JsonResponse($subtopic->delete());
+        return new Response(null, $subtopic->delete() ? 200 : 500);
     }
 }

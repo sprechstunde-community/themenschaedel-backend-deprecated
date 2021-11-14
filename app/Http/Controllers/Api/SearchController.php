@@ -18,10 +18,10 @@ class SearchController extends AbstractApiController
      * @OA\Get(
      *     path="/search/episodes",
      *     tags={"episodes", "search"},
-     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Parameter(name="q", in="query", description="Search string", required=true,
      *         @OA\Schema(type="string",example="Lorem Ipsum")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Response(
      *         response="200",
      *         description="Success",
@@ -54,10 +54,10 @@ class SearchController extends AbstractApiController
      * @OA\Get(
      *     path="/search/topics",
      *     tags={"topics", "search"},
-     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Parameter(name="q", in="query", description="Search string", required=true,
      *         @OA\Schema(type="string",example="Lorem Ipsum")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Response(
      *         response="200",
      *         description="Success",
@@ -89,10 +89,10 @@ class SearchController extends AbstractApiController
      * @OA\Get(
      *     path="/search/subtopics",
      *     tags={"subtopics", "search"},
-     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Parameter(name="q", in="query", description="Search string", required=true,
      *         @OA\Schema(type="string",example="Lorem Ipsum")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
      *     @OA\Response(
      *         response="200",
      *         description="Success",
