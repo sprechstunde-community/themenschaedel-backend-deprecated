@@ -23,7 +23,7 @@ use Laravel\Scout\Searchable;
  * @property int duration
  * @property string|null type
  * @property boolean explicit
- * @property DateTime published_at
+ * @property DateTime|null published_at
  *
  * @property Claim|null $claimed The active {@see Claim} resource indicating, that this episode is currently claimed.
  * @property Collection|Flag[] $flags All flags, that this episode has.
@@ -41,6 +41,8 @@ class Episode extends Model
     protected $perPage = 25;
 
     protected $casts = [
+        'duration' => 'integer',
+        'episode_number' => 'integer',
         'explicit' => 'bool',
     ];
 

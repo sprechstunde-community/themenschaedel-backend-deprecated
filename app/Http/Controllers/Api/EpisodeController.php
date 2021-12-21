@@ -61,10 +61,7 @@ class EpisodeController extends AbstractApiController
     {
         return EpisodeResource::collection(
             Episode::query()
-                ->with([
-                    'hosts:name,main,profile_picture',
-                    'topics:id,episode_id,name',
-                ])
+                ->with($this->relations)
                 ->orderBy('episode_number', 'desc')
                 ->paginate($this->getPerPageParameter($request))
         );
