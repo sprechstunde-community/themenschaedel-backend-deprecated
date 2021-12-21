@@ -26,7 +26,7 @@ trait AssertsJsonForModel
         return $json
             ->whereAllType([
                 'id' => 'integer',
-                'uuid' => 'string',
+                'guid' => 'string',
                 'episode_number' => 'integer',
                 'title' => 'string',
                 'subtitle' => 'nullable|string',
@@ -44,8 +44,8 @@ trait AssertsJsonForModel
             ->missingAll([
                 'deleted_at',
             ])
-            ->has('hosts', fn($json) => self::assertJsonIsHost($json))
-            ->has('topics', fn($json) => self::assertJsonIsTopic($json))
+            ->has('hosts.0', fn($json) => self::assertJsonIsHost($json))
+            ->has('topics.0', fn($json) => self::assertJsonIsTopic($json))
             ->etc();
     }
 
