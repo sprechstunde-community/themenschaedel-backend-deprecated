@@ -18,6 +18,7 @@ class HostTest extends TestCase
     private User $user;
     private Episode $episode;
     private Host $host;
+    private string $token;
 
     public function test_listing_resources()
     {
@@ -58,7 +59,7 @@ class HostTest extends TestCase
     /** @depends test_creating_resource_requires_authentication */
     public function test_creating_resource()
     {
-        $token = $this->user->createToken('testsuite')->plainTextToken;
+        $token = $this->token;
         $resource = Host::factory()->makeOne();
 
         self::assertEmpty(Host::all(), 'Failed asserting that test environment has no topics generated.');
@@ -83,10 +84,10 @@ class HostTest extends TestCase
     }
 
     /** @depends test_updating_resource_requires_authentication */
-    public function test_updating_resource_fails_for_standard_users()
+    public function test_updating_resource_fails_for_contributors()
     {
         $resource = Host::factory()->create([], $this->user);
-        $token = $this->user->createToken('testsuite')->plainTextToken;
+        $token = $this->token;
 
         $response = self::withToken($token)->putJson(route('api.hosts.update', ['host' => $resource]), [
             'name' => 'Updated name',
@@ -110,7 +111,7 @@ class HostTest extends TestCase
     public function test_deleting_resource()
     {
         $resource = Host::factory()->create([], $this->user);
-        $token = $this->user->createToken('testsuite')->plainTextToken;
+        $token = $this->token;
 
         $response = self::withToken($token)->deleteJson(route('api.hosts.destroy', ['host' => $resource]));
 
@@ -123,6 +124,20 @@ class HostTest extends TestCase
         parent::setUp();
 
         $this->episode = Episode::factory()->create();
-        $this->user = User::factory()->create();
+        [$this->user, $this->token] = $this->createContributor();
+    }
+
+    protected function createContributor(): array {
+        $user = User::factory()->contributor()->create();
+        $token = $user->createToken('testsuite')->plainTextToken;
+
+        return [$user, $token];
+    }
+
+    protected function createModerator(): array {
+        $user = User::factory()->moderator()->create();
+        $token = $user->createToken('testsuite')->plainTextToken;
+
+        return [$user, $token];
     }
 }
