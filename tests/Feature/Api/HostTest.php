@@ -84,7 +84,7 @@ class HostTest extends TestCase
     }
 
     /** @depends test_updating_resource_requires_authentication */
-    public function test_updating_resource_fails_for_contributors()
+    public function test_updating_resource_is_forbidden()
     {
         $resource = Host::factory()->create([], $this->user);
         $token = $this->token;
@@ -95,6 +95,20 @@ class HostTest extends TestCase
 
         $response->assertForbidden();
         self::assertSame($resource, $resource->refresh(), 'Failed asserting that resource was not updated');
+    }
+
+    public function test_updating_resource_by_moderator()
+    {
+        [$user, $token] = $this->createModerator();
+        $resource = Host::factory()->create([], $user);
+
+        $response = self::withToken($token)->putJson(route('api.hosts.update', ['host' => $resource]), [
+            'name' => 'Updated name',
+        ]);
+
+        $response->assertOk();
+        self::assertEquals('Updated name', $resource->refresh()->getAttribute('name'),
+            'Failed asserting that host was updated');
     }
 
     public function test_deleting_resource_requires_authentication()
@@ -108,7 +122,7 @@ class HostTest extends TestCase
     }
 
     /** @depends test_deleting_resource_requires_authentication */
-    public function test_deleting_resource()
+    public function test_deleting_resource_is_forbidden()
     {
         $resource = Host::factory()->create([], $this->user);
         $token = $this->token;
@@ -117,6 +131,17 @@ class HostTest extends TestCase
 
         $response->assertForbidden();
         self::assertCount(1, Host::all(), 'Failed asserting that resource was not deleted');
+    }
+
+    public function test_deleting_resource_by_moderator()
+    {
+        [$user, $token] = $this->createModerator();
+        $resource = Host::factory()->create([], $user);
+
+        $response = self::withToken($token)->deleteJson(route('api.hosts.destroy', ['host' => $resource]));
+
+        $response->assertOk();
+        self::assertEmpty(Host::all(), 'Failed asserting that host was deleted');
     }
 
     protected function setUp(): void

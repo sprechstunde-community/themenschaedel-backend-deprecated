@@ -58,8 +58,7 @@ class HostPolicy
      */
     public function update(User $user, Host $host)
     {
-        // TODO restrict to users with moderator role
-        return false;
+        return $user->isModerator();
     }
 
     /**
@@ -72,8 +71,7 @@ class HostPolicy
      */
     public function delete(User $user, Host $host)
     {
-        // TODO restrict to users with moderator role
-        return false;
+        return $user->isModerator();
     }
 
     /**
