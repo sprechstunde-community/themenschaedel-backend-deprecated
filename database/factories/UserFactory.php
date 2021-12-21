@@ -32,4 +32,20 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
+
+    /**
+     * User hasn't the moderator role
+     */
+    public function contributor(): UserFactory
+    {
+        return $this->state(fn(array $attributes) => ['is_moderator' => false]);
+    }
+
+    /**
+     * User has the moderator role
+     */
+    public function moderator(): UserFactory
+    {
+        return $this->state(fn(array $attributes) => ['is_moderator' => true]);
+    }
 }

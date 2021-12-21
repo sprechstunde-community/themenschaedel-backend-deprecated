@@ -29,7 +29,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return array_merge($this->only(['username', 'description', 'created_at']), [
+        return array_merge($this->only(['username', 'description', 'is_moderator', 'created_at']), [
             'profile_picture' => sprintf("https://www.gravatar.com/avatar/%s?s=%d",
                 md5(strtolower(trim($this->email))), self::PP_SIZE),
         ]);

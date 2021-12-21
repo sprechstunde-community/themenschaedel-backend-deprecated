@@ -71,6 +71,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_moderator' => 'boolean',
     ];
 
     /**
@@ -110,5 +111,11 @@ class User extends Authenticatable
     public function subtopics(): HasMany
     {
         return $this->hasMany(Subtopic::class);
+    }
+
+    /** Check if user has moderator capabilities */
+    public function isModerator(): bool
+    {
+        return (bool)$this->getAttribute('is_moderator');
     }
 }

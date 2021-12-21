@@ -136,6 +136,7 @@ trait AssertsJsonForModel
                 'username' => 'string',
                 'description' => 'string|null',
                 'profile_picture' => 'string|null',
+                'is_moderator' => 'boolean',
                 'created_at' => 'string',
             ])
             ->missingAll([
